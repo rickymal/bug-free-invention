@@ -4,8 +4,22 @@
   border: 0;
 }
 
+div.registration-container label {
+    font-weight: bold;
+}
 
-
+div.registration-container button {
+    float: right;
+    align-self: flex-end;
+    padding: 10px;
+    border: 1px;
+    border-style: solid;
+    background-color: blue;
+    color: white;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 30px;
+}
 div.card {
     
     margin: 10px;  

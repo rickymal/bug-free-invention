@@ -1,0 +1,26 @@
+{
+  "name": "book-virtual-library",
+  "version": "1.0.0",
+  "description": "- [] Registro de usuário \r - [] Carregar as coletâneas \r - [] Alugar um livro\r - [] Inserir um livro",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rickymal/bug-free-invention.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rickymal/bug-free-invention/issues"
+  },
+  "homepage": "https://github.com/rickymal/bug-free-invention#readme",
+  "dependencies": {
+    "nodemon": "^2.0.7",
+    "sequelize": "^6.6.2"
+  }
+}
