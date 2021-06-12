@@ -7,3 +7,5 @@
 - [] Alterar o nome do arquivo registration para login
 - [] Alterar o nome do arquivo Dashboard para add user book
 - [] Alterar o nome do arquivo index para add user dashboard
+- [] Adicionar caminho ao path
+

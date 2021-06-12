@@ -1,0 +1,117 @@
+* {
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+  
+}
+
+
+body {
+
+  font-family: "Open Sans", sans-serif;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+}
+
+nav {
+
+    width: 100%;
+    display: flex;
+    background-color: rgb(91, 174, 210);
+    justify-content:space-between;
+    padding: 10px 0;
+    
+}
+
+nav a {
+
+    color: #fff;
+    margin: auto 20px auto 40px;
+    text-decoration: none;
+    font-weight: bold;
+    z-index: 0;
+}
+
+nav ul {
+    margin: 0 10px;
+
+}
+nav li {
+
+    float: left;
+    list-style: none;
+    margin-left: 20px;
+
+}
+
+div.booklandia {
+
+    z-index: 1;
+    display: grid;
+    background-color: blueviolet;
+    grid-template-columns: repeat(8,1fr);
+    width: 100vw;
+
+}
+
+div.card {
+    
+    margin: 10px;  
+    min-width: 200px;
+    min-height: 200px;
+    max-width: 200px;
+    max-height: 200px;
+    background-color: rgb(235, 108, 35);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px 5px;
+}
+
+
+div.card > div:last-child > button {
+    background-color: bisque;
+    border: 1px;
+    min-width: 40px;
+    min-height: 10px;
+    border-radius: 3px;
+    border-style:solid;
+    transition: 0.2s;
+    padding: 2px 2px;
+    margin: 2px 2px;
+}
+
+
+div.card > div:last-child {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    flex-direction: row;
+    justify-content: space-around;
+    grid-row-start: -1;
+}
+
+div.card > button:hover {
+    background-color: rgb(92, 71, 45);
+    
+}
+
+div.text-content {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+div.text-content h1 {
+    font-size: 15px;
+}
+
+div.text-content text {
+    font-size: 10px;
+    overflow: hidden;
+    text-align: justify;
+}

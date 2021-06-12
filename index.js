@@ -23,46 +23,47 @@ const styles = [
 ]
 console.log("Páginas carregadas");
 
-
-
 const server = http.createServer((request,response) => {
 
-    response.writeHead(200, {
-    'Access-Control-Allow-Origin' : '*',
-    'Access-Control-Allow-Methods' : 'OPTIONS,POST,GET',
-    'Content-Type' : 'application/html'
-})
+  
+    response.setHeader('Access-Control-Allow-Origin','*')
+    response.setHeader('Access-Control-Allow-Methods','OPTIONS,POST,GET')
 
 
         console.log("Acessando URL: " + request.url)
 
         switch(request.url) {
             case "/":
+            
                 response.writeHead(200)
-                
                 response.end("Entrando na rota principal")
-                break
+                break;
             case "/home" :
                 console.log("TIPAGEM: " + typeof pages.index)
+                response.setHeader("Content-Type","text/html")
                 
-                response.end(pages.index)
-                break
-
-
-            case '/pages/mystyle.css':
-                response.setHeader("Content-Type","application/css")
                 
+                response.writeHead(200)
+                response.end(pages.index + ".html")
+            break;
+            
+            
+            case '/mystyle.css':
+                response.setHeader("Content-Type","text/css")
+                
+                response.writeHead(200)
                 response.end(styles[1]);
                 console.log("Pegando meu estilo");
                 break;
-            case '/pages/dashboard.css':
-                response.setHeader("Content-Type","application/css")
+            case '/dashboard.css':
+                response.setHeader("Content-Type","text/css")
                 
+                response.writeHead(200)
                 response.end(styles[0]);
                 
                 break;
             case '/pages/registration.css':
-                response.setHeader("Content-Type","application/css")
+                response.setHeader("Content-Type","text/css")
                 response.writeHead(200)
                 response.end(styles[2]);
                 break;
