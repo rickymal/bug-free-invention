@@ -31,6 +31,10 @@ const styles = [
     fs.readFileSync(join(pages_directory,"registration.css"),{encoding : 'utf-8'}),
 ]
 
+const scripts = {
+    main : fs.readFileSync(join(pages_directory,"main.js"),{encoding : 'utf-8'}),
+}
+
 
 
 
@@ -188,6 +192,11 @@ const server = http.createServer((request,response) => {
                 request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
                 break;
                 
+            case "/script/dashboard.js":
+                response.setHeader("Content-type","text/javascript")
+                response.writeHead(200)
+                response.end(scripts.main)
+                break;
             default:
                 response.writeHead(404)
                 
