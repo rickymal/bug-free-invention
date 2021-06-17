@@ -4,6 +4,8 @@ const port = 3000
 const host = 'localhost'
 
 
+
+
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -56,6 +58,10 @@ class Book extends Model {
     
 }
 
+class Reservation extends Model {
+
+}
+
 
 var dt = DataTypes
 User.init({
@@ -69,6 +75,8 @@ Book.init({
 }, {sequelize, modelName : 'book'})
 
 
+Reservation.init({},{sequelize, modelName : "reservation"})
+
 User.hasMany(Book)
 Book.belongsTo(User, {
     foreignKey : {
@@ -77,8 +85,15 @@ Book.belongsTo(User, {
     constraints : true,
 });
 
-// Team.hasMany(Mentoring);
-// Mentoring.belongsTo(Team);
+
+User.hasMany(Reservation)
+Reservation.belongsTo(User)
+
+
+Book.hasOne(Reservation)
+Reservation.belongsTo(Book)
+
+
 
 
 async function initializeSequelize() {
@@ -86,8 +101,6 @@ async function initializeSequelize() {
 }
 
 await initializeSequelize();
-
-
 
 const rique_user = await User.create({
     email : "henriquemauler@gmail.com",
@@ -137,20 +150,19 @@ const server = http.createServer((request,response) => {
                 console.log("TIPAGEM: " + typeof pages.index)
                 response.setHeader("Content-Type","text/html")
                 response.writeHead(200)
-                response.end(pages.index + ".html")
+                response.end(pages.index)
                 break;
-                case "/dashboard":
-                    console.log("página do dashboard");
+            case "/dashboard":
+                console.log("página do dashboard");
                 response.setHeader("Content-type","text/html")
                 response.writeHead(200)
-                response.end(pages.dashboard + ".html")
+                response.end(pages.dashboard)
                 break;
-
             case "/registration":
                 console.log("Página de registro")
                 response.setHeader("Content-type","text/html")
                 response.writeHead(200)
-                response.end(pages.registration + ".html")
+                response.end(pages.registration)
                 break;
 
             case '/mystyle.css':
@@ -173,9 +185,10 @@ const server = http.createServer((request,response) => {
                 break;
 
             case "/api/make_login":
-                let body = "";
+                var body = "";
                 console.log("Verificando a request: " + request.method)
                 console.log("Verificando a request: " + request.httpVersion)
+                
                 request.on('data',chunk => {
                     console.log("Chamando uma chunk")
                     body += chunk
@@ -188,18 +201,63 @@ const server = http.createServer((request,response) => {
                     
                 })
 
-
                 request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
                 break;
                 
-            case "/script/dashboard.js":
+            case "/main.js":
                 response.setHeader("Content-type","text/javascript")
                 response.writeHead(200)
                 response.end(scripts.main)
                 break;
+
+            case "/api/books":
+                console.log("Entrando em /api/books")
+                console.log("Verificando a request: " + request.method)
+                console.log("Verificando a request: " + request.httpVersion)
+                response.setHeader("Content-type","application/json")
+                response.writeHead(200)
+                const json_stringified = JSON.stringify({result : "Ding din Ding din sou foda" })
+                
+                Book.findAll({where : {}})
+                    .then(e => {
+                        console.log(JSON.stringify(e))
+                        response.end(JSON.stringify(e))
+                    })
+
+                break;
+
+
+            case "/api/choose_book":
+                var body_as_string = "";
+                console.log("Verificando a request: " + request.method)
+                console.log("Verificando a request: " + request.httpVersion)
+                
+                request.on('data',chunk => {
+                    console.log("Chamando uma chunk")
+                    body_as_string += chunk
+                })
+
+                request.on('end',() => {
+                    response.setHeader("Content-type","application/json")
+                    response.writeHead(200)
+                    console.log("O conteúdo enviado é: " + typeof(body_as_string));
+                    console.log("O conteúdo enviado é: " + body_as_string);
+                    response.end(body_as_string);
+                    const body_parsed = JSON.parse(body_as_string)
+
+                    Book.findOne({where : { id : body_parsed.id}})
+                        .then(the_book_one => {
+                            console.log(the_book_one)
+                        })
+                    
+                })
+
+                request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
+                break;
+            
+
             default:
                 response.writeHead(404)
-                
                 response.end("Algo de errado não está certo, a página não foi encontrada","utf-8")
                 break;
         }
