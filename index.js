@@ -317,13 +317,39 @@ const server = http.createServer(async (request,response) => {
                     body_as_string += chunk
                 })
 
-                request.on('end',() => {
+                request.on('end',async () => {
 
                     console.log("finish of parsing:" + body_as_string )
-                    var body_parsed = JSON.parse(body_as_string)
                     
+                    
+                    console.log(body_as_string.split("&"))
+
+                    // converter o conteúdo para um formato de json
+
+                    console.log()
+
+                    var object_received = {}
+                    body_as_string.split("&").forEach(content => {
+                        var v = content.split("=")
+                        object_received[v[0]] = v[1]
+                    })
+
+                    console.log(object_received)
+
+                    // criando um novo livro
+
+
+
+
+                    // const new_book = new Book(object_received)
+                    const new_book = await Book.create(object_received)
+
+                    console.log("Content of the book!!!!!!!!!!:" + new_book)
+
                     response.writeHead(200)
                     response.end(body_as_string)
+
+                    
 
                 })
 

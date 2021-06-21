@@ -27,8 +27,6 @@
                 </div>
                 <button>Excluir título</button>        
             </div>  
-            
-
         </div>
     </div>
     <div class = "container">
@@ -36,11 +34,11 @@
         <div class = "flex-book">
             <form action="/api/add_title" method = "post" id="frm1">
                 <label>Título do livro ou revista</label>
-                <input id = "txt" type="text"  name = "title_in" placeholder= "Insira um título para o livro">
+                <input id = "txt" type="text"  name = "title" placeholder= "Insira um título para o livro">
                 <label>Descrição do título</label>
-                <textarea name="description_in" id = "txt" placeholder= "Insira uma descrição do produto" ></textarea>
-                
+                <textarea name="description" id = "txt" placeholder = "Insira uma descrição do produto" ></textarea>
                 <input type="submit" class="submit-button" form="frm1" value="entrar">
+                <input type="hidden" name = "userId" form="frm1" value="1" id = "hidden-input-user-id">
             </form>
         </div>
     </div>
@@ -48,6 +46,7 @@
    
     <footer></footer>
     <script type = "text/javascript" src = "scripts/dashboard.js"></script>
+    
     
     
     

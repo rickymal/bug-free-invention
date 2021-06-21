@@ -1,4 +1,9 @@
 // localStorage.setItem('userId',1) // deve ser setado posteriormente
+var userId = localStorage.getItem("userId");
+if (!userId) {
+  // throw new Error("Variável UserId não foi definida em localStorage")
+  userId = 1; //para fins de teste
+}
 
 function get_data() {
   console.log("Buscando os livros do usuário");
@@ -7,11 +12,6 @@ function get_data() {
   var cache = "default";
   var headers = new Headers();
 
-  var userId = localStorage.getItem("userId");
-  if (!userId) {
-    // throw new Error("Variável UserId não foi definida em localStorage")
-    userId = 1; //para fins de teste
-  }
 
   var body = JSON.stringify({ userId });
   console.log("Conteúdo no userId: " + body);
@@ -32,9 +32,9 @@ function get_data() {
       var content_response = await response.json();
       if (content_response[0]) {
         
-        return content_response[0];
+        return content_response[0]; //um erro que faz com que a informações retorne um corpo dentro de outro
       } else {
-        return content_response; //um erro que faz com que a informações retorne
+        return content_response; 
       }
 
       
@@ -67,7 +67,13 @@ function onLoad() {
   console.log("dashboard loaded");
 
   var content = get_data();
-}
+
+  // adicionar o userId do usuário
+  var form_doc = document.getElementById('hidden-input-user-id')
+  form_doc.setAttribute("value",userId.toString())
+
+
+}   
 
 // declarar os eventos
 window.onload = onLoad;
