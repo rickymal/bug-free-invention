@@ -283,16 +283,22 @@ const server = http.createServer(async (request,response) => {
 
             case "/api/request_books":
                 var body_as_string = "";
-
+                console.log("Rota " + "/api/request_books")
                 request.on('data',chunk => {
                     console.log("Chamando uma chunk")
-                    body_as_string += chunk
+                    body_as_string += chunk 
+                    
+                    console.log("content-as-string: " + body_as_string)
                 })
-
+                
+                
 
                 request.on('end',async () => {
-                    console.log("content-as-string: " + body_as_string)
+                    console.log("final: " + body_as_string)
                     var { userId } = JSON.parse(body_as_string)
+                    
+                    userId = Number(userId)
+                    console.log("type: " + typeof(userId))
 
                     response.setHeader("Content-type","application/json")
                     response.writeHead(200)
@@ -326,7 +332,7 @@ server.listen(port,host, () => {
 
 
 async function search_book_user(userId) {    
-    var bookId = 1;
+    
 
     var response = await Book.findAll({ where: { userId } });
     var data_parsed = JSON.parse(JSON.stringify(response));
