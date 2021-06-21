@@ -10,4 +10,5 @@
 - [] Atualizar o banco de dados para fazer o registro das reservas
 - [] Programar o algoritmo para fazer a reserva dos títulos
 - [] A definir 
-
+- [] Realizar um filtro para que apenas os livros não reservados apareçam na dashboard
+- [] Verificar qual o corretor status code para retornar na função choose_book quando o usuário não puder selecionar mais de um livro

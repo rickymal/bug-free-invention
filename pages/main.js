@@ -1,5 +1,5 @@
 
-
+localStorage.setItem('userId',1)
 
 
 function onLoad() {
@@ -14,15 +14,17 @@ function onLoad() {
     getBooks()
 }
 
-function btnClick(id) {
-    alert("O id do botão clicado é: " + id)
+function btnClick(bookId) {
+    alert("O id do botão clicado é: " + bookId)
     var method = "POST"
     var mode =  "no-cors"
     var cache = "default"
     var headers = new Headers()
 
-    var body = JSON.stringify({ id })
+    var userId = localStorage.getItem('userId')
+    var body = JSON.stringify({ id : bookId , userId : userId})
     
+
     var requestOptions = new Request("/api/choose_book", {method, headers, mode, cache, body} )
     headers.append("Content-type","application/json")
 
@@ -34,6 +36,10 @@ function btnClick(id) {
         })
         .then(f => {
             console.log(f)
+            if (f.status == "Added successful") {
+                var div_to_delete = document.getElementById('div-' + bookId)
+                div_to_delete.remove()
+            }
             
         })
 }

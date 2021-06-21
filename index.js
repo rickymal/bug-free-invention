@@ -96,6 +96,7 @@ Reservation.belongsTo(Book)
 
 
 
+
 async function initializeSequelize() {
     await sequelize.sync({force : true})
 }
@@ -130,9 +131,18 @@ book1.setUser(rique_user)
 book2.setUser(another_user)
 
 
+// escolhendo um livro e criando uma reserva
+
+
+
+var userId = 1;
+var bookId = 1;
+
+// checando se já tem alguma reserva do livro selecionado
+
 
 /* Server configuration and routing */
-const server = http.createServer((request,response) => {
+const server = http.createServer(async (request,response) => {
     
     
     response.setHeader('Access-Control-Allow-Origin','*')
@@ -141,12 +151,11 @@ const server = http.createServer((request,response) => {
     
     switch(request.url) {
         case "/":
-            
             response.writeHead(200)
             response.end("Entrando na rota principal")
             break;
 
-            case "/home" :
+            case "/index" :
                 console.log("TIPAGEM: " + typeof pages.index)
                 response.setHeader("Content-Type","text/html")
                 response.writeHead(200)
@@ -232,30 +241,46 @@ const server = http.createServer((request,response) => {
                 console.log("Verificando a request: " + request.method)
                 console.log("Verificando a request: " + request.httpVersion)
                 
+                
+
+
                 request.on('data',chunk => {
                     console.log("Chamando uma chunk")
                     body_as_string += chunk
                 })
 
                 request.on('end',() => {
-                    response.setHeader("Content-type","application/json")
-                    response.writeHead(200)
-                    console.log("O conteúdo enviado é: " + typeof(body_as_string));
-                    console.log("O conteúdo enviado é: " + body_as_string);
-                    response.end(body_as_string);
-                    const body_parsed = JSON.parse(body_as_string)
+                    
+                    //Implementação do recurso
+                    const json = JSON.parse(body_as_string)
+                    console.log(json)
 
-                    Book.findOne({where : { id : body_parsed.id}})
-                        .then(the_book_one => {
-                            console.log(the_book_one)
-                        })
+                    // await choose_book();
+
+                    
+                    
+                    choose_book(json).then(e => {
+                        return JSON.stringify(e)
+                    }).then(f => {
+                        
+                        response.setHeader("Content-type","application/json")
+                        response.writeHead(200)
+                        response.end(f)
+
+                        return 0;
+                    })
+                    
+
+                    // Book.findOne({where : { id : json.id}})
+                    //     .then(the_book_one => {
+                    //         console.log(the_book_one)
+                    //     })
+                    
                     
                 })
 
                 request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
                 break;
-            
-
             default:
                 response.writeHead(404)
                 response.end("Algo de errado não está certo, a página não foi encontrada","utf-8")
@@ -271,10 +296,34 @@ server.listen(port,host, () => {
     console.log("Olá mundo " + pages_directory);
 })
 
-function onRequestedInformation(request, response) {
+async function choose_book({userId, bookId}) {
+    var c = await Reservation.findAll({ where: { userId } });
+    var hasReservation = c.length > 0;
 
+    if (!hasReservation) {
+        console.log("há uma reserva");
+    } else {
+        console.warn("Não deveria chegar aqui, não deveria existir um livro já reservado visível na dashboard");
+
+        // checar como eu deveria retornar o status code nesse caso !!
+        return {
+            userId,bookId, status : "The user only can choose one book per time",
+        }
+        
+        
+    }
+    const reservation = new Reservation({
+        userId,
+        bookId,
+    });
+    reservation.save();
+
+    return {
+        userId,bookId, status : "Added successful"
+    }
 }
 
 
 
+const compile = (param) => JSON.stringify(content(JSON.parse(param)))
 
