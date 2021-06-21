@@ -12,26 +12,23 @@ function get_data() {
   var cache = "default";
   var headers = new Headers();
 
-
   var body = JSON.stringify({ userId });
   console.log("Conteúdo no userId: " + body);
   console.log("Tipo:" + typeof JSON.parse(body).userId);
-
   headers.append("Content-type", "application/json");
-
   var options = { method, mode, cache, body, headers };
 
+  
   console.log(options);
 
   // tinha esquecido da passar o options
   var requestOptions = new Request("/api/request_books", options);
   console.log("fetching");
   fetch(requestOptions)
-    .then(async (response) => {
+    .then(async response => {
       console.log(response);
       var content_response = await response.json();
       if (content_response[0]) {
-        
         return content_response[0]; //um erro que faz com que a informações retorne um corpo dentro de outro
       } else {
         return content_response; 
@@ -72,8 +69,9 @@ function onLoad() {
   var form_doc = document.getElementById('hidden-input-user-id')
   form_doc.setAttribute("value",userId.toString())
 
-
 }   
+
+
 
 // declarar os eventos
 window.onload = onLoad;
