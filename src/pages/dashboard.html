@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="mystyle.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+
+    <title>Document</title>
+  </head>
+  <body>
+    <nav>
+      <a href="#">Leitura</a>
+      <ul>
+        <li>Cadastrar usuário</li>
+        <li>Logar</li>
+        <li>Registrar novo título</li>
+      </ul>
+    </nav>
+    <div class="container">
+      <h1>Meus títulos</h1>
+      <div class="flex-row-content" id="flex-row-content">
+        <div class="card">
+          <div class="text-content" style="background-color: aqua">
+            <h1>titulo de teste</h1>
+            <text
+              >Este título não foi carregado pelo back-end. Está aqui apenas
+              para teste</text
+            >
+          </div>
+          <button>Excluir título</button>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <h1>adicionar títulos</h1>
+      <div class="flex-book">
+        <form action="/api/add_title" method="post" id="frm1">
+          <label>Título do livro ou revista</label>
+          <input
+            id="txt"
+            type="text"
+            name="title"
+            placeholder="Insira um título para o livro"
+          />
+          <label>Descrição do título</label>
+          <textarea
+            name="description"
+            id="txt"
+            placeholder="Insira uma descrição do produto"
+          ></textarea>
+          <input
+            type="submit"
+            class="submit-button"
+            form="frm1"
+            value="entrar"
+          />
+          <input
+            type="hidden"
+            name="userId"
+            form="frm1"
+            value="1"
+            id="hidden-input-user-id"
+          />
+        </form>
+      </div>
+    </div>
+
+    <footer></footer>
+    <script type="text/javascript" src="scripts/dashboard.js"></script>
+  </body>
+</html>

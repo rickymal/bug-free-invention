@@ -13,7 +13,6 @@ const { Sequelize, Model, DataTypes } = pkg;
 /* Global variables */
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-//console.log("Carregando as páginas")
 const pages_directory = join(__dirname, "pages");
 
 const pages = {
@@ -28,15 +27,16 @@ const pages = {
   }),
 };
 
-const styles = [
-  fs.readFileSync(join(pages_directory, "dashboard.css"), {
+
+const styles = {
+  dashboard : fs.readFileSync(join(pages_directory, "dashboard.css"), {
+    encoding: "utf-8" 
+  }),
+  main : fs.readFileSync(join(pages_directory, "main.css"), { encoding: "utf-8" }),
+  registration : fs.readFileSync(join(pages_directory, "registration.css"), {
     encoding: "utf-8",
   }),
-  fs.readFileSync(join(pages_directory, "mystyle.css"), { encoding: "utf-8" }),
-  fs.readFileSync(join(pages_directory, "registration.css"), {
-    encoding: "utf-8",
-  }),
-];
+}
 
 const scripts = {
   main: fs.readFileSync(join(pages_directory, "main.js"), {
@@ -122,15 +122,12 @@ const book2 = await Book.create({
 book1.setUser(rique_user);
 book2.setUser(another_user);
 
-/* Tests */
 
-// buscar todos os títulos do usuário
 
 /* Server configuration and routing */
 const server = http.createServer(async (request, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
   response.setHeader("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
-  console.log("Acessando URL: " + request.url);
 
   switch (request.url) {
     case "/":
@@ -139,133 +136,108 @@ const server = http.createServer(async (request, response) => {
       break;
 
     case "/index":
-      //console.log("TIPAGEM: " + typeof pages.index)
       response.setHeader("Content-Type", "text/html");
       response.writeHead(200);
       response.end(pages.index);
       break;
     case "/dashboard":
-      //console.log("página do dashboard");
       response.setHeader("Content-type", "text/html");
       response.writeHead(200);
       response.end(pages.dashboard);
       break;
     case "/registration":
-      //console.log("Página de registro")
       response.setHeader("Content-type", "text/html");
       response.writeHead(200);
       response.end(pages.registration);
       break;
 
-    case "/mystyle.css":
+    case "/main.css":
       response.setHeader("Content-Type", "text/css");
 
       response.writeHead(200);
-      response.end(styles[1]);
-      //console.log("Pegando meu estilo");
+      response.end(styles.main);
+
       break;
     case "/dashboard.css":
       response.setHeader("Content-Type", "text/css");
       response.writeHead(200);
-      response.end(styles[0]);
+      response.end(styles.dashboard);
 
       break;
     case "/registration.css":
       response.setHeader("Content-Type", "text/css");
       response.writeHead(200);
-      response.end(styles[2]);
+      response.end(styles.registration);
       break;
 
     case "/api/make_login":
       var body = "";
-      //console.log("Verificando a request: " + request.method)
-      //console.log("Verificando a request: " + request.httpVersion)
 
-      request.on("data", (chunk) => {
-        //console.log("Chamando uma chunk")
-        body += chunk;
-      });
-
-      request.on("end", () => {
-        response.setHeader("Content-type", "text/plain");
-        response.writeHead(200);
-        response.end("O conteúdo enviado é: " + body);
-      });
-
-      //request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
+      composeJSON(request)
+        .then(json_result => {
+          response.setHeader("Content-type", "text/plain");
+          response.writeHead(200);
+          response.end("O conteúdo enviado é: " + body);
+        })
+        .catch(error => {
+          response.setHeader("Content-type", "text/plain");
+          response.writeHead(500)
+        })
       break;
 
-    case "/main.js":
+    case "/scripts/main.js":
       response.setHeader("Content-type", "text/javascript");
       response.writeHead(200);
       response.end(scripts.main);
       break;
 
     case "/api/books":
-      //console.log("Entrando em /api/books")
-      //console.log("Verificando a request: " + request.method)
-      //console.log("Verificando a request: " + request.httpVersion)
       response.setHeader("Content-type", "application/json");
       response.writeHead(200);
       const json_stringified = JSON.stringify({
-        result: "Ding din Ding din sou foda",
+        result: "ok",
       });
 
       Book.findAll({ where: {} }).then((e) => {
-        //console.log(JSON.stringify(e))
         response.end(JSON.stringify(e));
       });
 
       break;
 
     case "/api/choose_book":
-      var body_as_string = "";
-      //console.log("Verificando a request: " + request.method)
-      //console.log("Verificando a request: " + request.httpVersion)
-      request.on("data", (chunk) => {
-        //console.log("Chamando uma chunk")
-        body_as_string += chunk;
-      });
 
-      request.on("end", () => {
-        //Implementação do recurso
-        const json = JSON.parse(body_as_string);
-        //console.log(json)
+      composeJSON(request)
+        .then(result => {
+          return choose_book(result)
+        })
+        .then(book_choice => {
+          return JSON.stringify(book_choice)
+        })
+        .then(book_choice => {
+          response.setHeader("Content-type", "application/json");
+          response.writeHead(200);
+          response.end(book_choice);
 
-        // await choose_book();
+          
+        })
+        .catch(error => {
 
-        choose_book(json)
-          .then((e) => {
-            return JSON.stringify(e);
-          })
-          .then((f) => {
-            response.setHeader("Content-type", "application/json");
-            response.writeHead(200);
-            response.end(f);
+        })
 
-            return 0;
-          });
-      });
 
-      //request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
       break;
 
     case "/api/request_books":
       var body_as_string = "";
-      //console.log("Rota " + "/api/request_books")
-      request.on("data", (chunk) => {
-        //console.log("Chamando uma chunk:" + chunk)
-        body_as_string += chunk;
 
-        //console.log("content-as-string: " + body_as_string)
+      request.on("data", (chunk) => {
+        body_as_string += chunk;
       });
 
       request.on("end", async () => {
-        //console.log("final: " + body_as_string)
         var { userId } = JSON.parse(body_as_string);
 
         userId = Number(userId);
-        //console.log("type: " + typeof(userId))
 
         response.setHeader("Content-type", "application/json");
         response.writeHead(200);
@@ -278,25 +250,17 @@ const server = http.createServer(async (request, response) => {
       response.setHeader("Content-type", "application/json");
 
       request.on("data", (chunk) => {
-        console.log("chunks!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         body_as_string += chunk;
       });
 
       request.on("end", async () => {
-        console.log("finish of parsing:" + body_as_string);
-        console.log(body_as_string.split("&"));
-
         // converter o conteúdo para um formato de json
-
-        console.log();
 
         var object_received = {};
         body_as_string.split("&").forEach((content) => {
           var v = content.split("=");
           object_received[v[0]] = v[1];
         });
-
-        console.log(object_received);
 
         try {
           const new_book = await Book.create({
@@ -306,7 +270,6 @@ const server = http.createServer(async (request, response) => {
           });
 
           var content = JSON.stringify(new_book.toJSON());
-          console.log("Content of the book!!!!!!!!!!:" + content);
 
           response.writeHead(200);
           response.end(content);
@@ -340,31 +303,26 @@ const server = http.createServer(async (request, response) => {
   }
 });
 
-server.listen(port, host, () => {
-  //console.log("Servidor está rodando na em http://" + host + ":" + port);
-  //console.log("Olá mundo " + pages_directory);
-});
+// server.listen(port, host, () => {});
 
 async function search_book_user(userId) {
   var response = await Book.findAll({ where: { userId } });
   var data_parsed = JSON.parse(JSON.stringify(response));
-  //console.log(data_parsed);
+
   return {
     ...data_parsed,
     withUser: userId,
   };
 }
-var userId = 1;
 
+
+// o usuário de id 'userId' seleciona o livro de id 'bookId'
 async function choose_book({ userId, bookId }) {
   var c = await Reservation.findAll({ where: { userId } });
   var hasReservation = c.length > 0;
 
   if (!hasReservation) {
-    //console.log("há uma reserva");
   } else {
-    //console.warn("Não deveria chegar aqui, não deveria existir um livro já reservado visível na dashboard");
-
     // checar como eu deveria retornar o status code nesse caso !!
     return {
       userId,
@@ -386,3 +344,22 @@ async function choose_book({ userId, bookId }) {
 }
 
 const compile = (param) => JSON.stringify(content(JSON.parse(param)));
+
+
+
+function composeJSON(request) {
+  return new Promise(function(resolve,reject){
+    var body_parsed = ""
+    request.on('data',chunk => {
+        body_parsed += chunk
+    })
+
+    request.on('end',() => {
+        resolve(JSON.parse(body_parsed))
+    })
+
+    request.on('error',error => {
+        reject(error)
+    })
+  })
+}
