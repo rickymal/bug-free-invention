@@ -19,34 +19,22 @@
     </nav> 
     <div class = "container">
         <h1>Meus títulos</h1>
-        <div class="flex-row-content">
+        <div class="flex-row-content" id = "flex-row-content">
             <div class='card'>
                 <div class="text-content" style="background-color: aqua;">
-                    <h1>titulo</h1>
-                    <text>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolor animi delectus quisquam, corrupti pariatur atque et tenetur, accusamus cumque ullam ex quae excepturi voluptas perferendis esse asperiores voluptatem? Accusamus, ducimus.</text>
+                    <h1>titulo de teste</h1>
+                    <text>Este título não foi carregado pelo back-end. Está aqui apenas para teste</text>
                 </div>
-                <button>Excluir título</button>
-                
-            </div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
-            <div class='card'></div>
+                <button>Excluir título</button>        
+            </div>  
+            
+
         </div>
     </div>
     <div class = "container">
         <h1>adicionar títulos</h1>
         <div class = "flex-book">
-            <form action="" method = "POST" id="frm1">
+            <form action="/api/add_title" method = "POST" id="frm1">
                 <label>Título do livro ou revista</label>
                 <input id = "txt" type="text">
                 <label>Descrição do título</label>

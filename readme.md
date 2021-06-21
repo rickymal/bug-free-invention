@@ -12,3 +12,4 @@
 - [] A definir 
 - [] Realizar um filtro para que apenas os livros não reservados apareçam na dashboard
 - [] Verificar qual o corretor status code para retornar na função choose_book quando o usuário não puder selecionar mais de um livro
+- [] Descobrir porque na dashboard.js eu precisei tirar o objeto dentro de um outro {0 : {}}

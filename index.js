@@ -307,6 +307,34 @@ const server = http.createServer(async (request,response) => {
                 break;
 
 
+            case "/api/add_title":
+                
+                var body_as_string = ""
+                response.setHeader("Content-type","application/json")
+
+                request.on('data',chunk => {
+                    console.log("chunks")
+                    body_as_string += chunk
+                })
+
+                request.on('end',() => {
+                    var body_parsed = JSON.parse(body_as_string)
+                    response.writeHead(200)
+                    response.end(body_as_string)
+
+                })
+
+                request.on('error',error => {   
+                    response.setHeader
+                    response.writeHead(500)
+                    response.end("Algo de errado não está certo");
+                })
+
+
+                break;
+
+
+
             case "/scripts/dashboard.js":
                 response.setHeader("Content-type","text/javascript")
                 response.writeHead(200)
