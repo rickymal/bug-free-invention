@@ -5,10 +5,10 @@ actor       Student      as student
 
 
 boundary "Area of registration" as register
-boundary dashboard as dashboard
+boundary "Area de escolha dos livros" as dashboard
 
 boundary "book page" as book
-
+boundary "Area do usuario" as dash
 
 control "back-end controller" as controller
 
@@ -30,6 +30,18 @@ book -> controller : Confiar selecao do livro
 controller -> database : Reservar titulo
 database -> dashboard : Atualizar a pagina
 end
+
+group Apagar um titulo
+controller -> dash : Buscar todos os titulos do usuario
+dash -> controller : apagar os títulos
+end
+
+group Adicionar um titulo
+controller -> dash : Buscar todos os titulos
+dash -> controller : Aplicar as alterações desejadas
+end
+
+
 
 
 

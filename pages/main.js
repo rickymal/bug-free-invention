@@ -15,7 +15,7 @@ function onLoad() {
 }
 
 function btnClick(bookId) {
-    alert("O id do botão clicado é: " + bookId)
+    console.log("O id do botão clicado é: " + bookId)
     var method = "POST"
     var mode =  "no-cors"
     var cache = "default"
@@ -39,7 +39,7 @@ function btnClick(bookId) {
             if (f.status == "Added successful") {
                 var div_to_delete = document.getElementById('div-' + bookId)
                 div_to_delete.remove()
-            }
+            } 
             
         })
 }

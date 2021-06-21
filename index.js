@@ -41,6 +41,7 @@ const scripts = {
 
 
 
+
 /* Database space */
 
 
@@ -131,14 +132,14 @@ book1.setUser(rique_user)
 book2.setUser(another_user)
 
 
-// escolhendo um livro e criando uma reserva
+/* Tests */
+
+// buscar todos os títulos do usuário
 
 
 
-var userId = 1;
-var bookId = 1;
 
-// checando se já tem alguma reserva do livro selecionado
+
 
 
 /* Server configuration and routing */
@@ -240,10 +241,6 @@ const server = http.createServer(async (request,response) => {
                 var body_as_string = "";
                 console.log("Verificando a request: " + request.method)
                 console.log("Verificando a request: " + request.httpVersion)
-                
-                
-
-
                 request.on('data',chunk => {
                     console.log("Chamando uma chunk")
                     body_as_string += chunk
@@ -281,6 +278,15 @@ const server = http.createServer(async (request,response) => {
 
                 request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
                 break;
+
+
+            case "/api/request_books":
+                
+                response.setHeader("Content-type","application/json")
+                response.writeHead(200)
+                response.end(JSON.stringify(await search_book_user(userId)));
+
+
             default:
                 response.writeHead(404)
                 response.end("Algo de errado não está certo, a página não foi encontrada","utf-8")
@@ -295,6 +301,21 @@ server.listen(port,host, () => {
     console.log("Servidor está rodando na em http://" + host + ":" + port);
     console.log("Olá mundo " + pages_directory);
 })
+
+
+
+
+async function search_book_user(userId = 1) {    
+    var bookId = 1;
+
+    var response = await Book.findAll({ where: { userId } });
+    var data_parsed = JSON.parse(JSON.stringify(response));
+    console.log(data_parsed);
+    return data_parsed
+}
+var userId = 1;
+
+
 
 async function choose_book({userId, bookId}) {
     var c = await Reservation.findAll({ where: { userId } });
