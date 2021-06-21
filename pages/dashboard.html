@@ -34,12 +34,13 @@
     <div class = "container">
         <h1>adicionar títulos</h1>
         <div class = "flex-book">
-            <form action="/api/add_title" method = "POST" id="frm1">
+            <form action="/api/add_title" method = "post" id="frm1">
                 <label>Título do livro ou revista</label>
-                <input id = "txt" type="text">
+                <input id = "txt" type="text"  name = "title_in" placeholder= "Insira um título para o livro">
                 <label>Descrição do título</label>
-                <textarea id = "txt" ></textarea>
-                <button class = "submit-button" type="submit" form="frm1">Adicionar livro</button>
+                <textarea name="description_in" id = "txt" placeholder= "Insira uma descrição do produto" ></textarea>
+                
+                <input type="submit" class="submit-button" form="frm1" value="entrar">
             </form>
         </div>
     </div>

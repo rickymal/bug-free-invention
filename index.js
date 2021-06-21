@@ -18,7 +18,7 @@ const {Sequelize, Model, DataTypes} = pkg
 /* Global variables */
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-console.log("Carregando as páginas")
+//console.log("Carregando as páginas")
 const pages_directory = join(__dirname,"pages")
 
 const pages = {
@@ -158,19 +158,19 @@ const server = http.createServer(async (request,response) => {
             break;
 
             case "/index" :
-                console.log("TIPAGEM: " + typeof pages.index)
+                //console.log("TIPAGEM: " + typeof pages.index)
                 response.setHeader("Content-Type","text/html")
                 response.writeHead(200)
                 response.end(pages.index)
                 break;
             case "/dashboard":
-                console.log("página do dashboard");
+                //console.log("página do dashboard");
                 response.setHeader("Content-type","text/html")
                 response.writeHead(200)
                 response.end(pages.dashboard)
                 break;
             case "/registration":
-                console.log("Página de registro")
+                //console.log("Página de registro")
                 response.setHeader("Content-type","text/html")
                 response.writeHead(200)
                 response.end(pages.registration)
@@ -181,7 +181,7 @@ const server = http.createServer(async (request,response) => {
                 
                 response.writeHead(200)
                 response.end(styles[1]);
-                console.log("Pegando meu estilo");
+                //console.log("Pegando meu estilo");
                 break;
             case '/dashboard.css':
                 response.setHeader("Content-Type","text/css")
@@ -197,11 +197,11 @@ const server = http.createServer(async (request,response) => {
 
             case "/api/make_login":
                 var body = "";
-                console.log("Verificando a request: " + request.method)
-                console.log("Verificando a request: " + request.httpVersion)
+                //console.log("Verificando a request: " + request.method)
+                //console.log("Verificando a request: " + request.httpVersion)
                 
                 request.on('data',chunk => {
-                    console.log("Chamando uma chunk")
+                    //console.log("Chamando uma chunk")
                     body += chunk
                 })
 
@@ -212,7 +212,7 @@ const server = http.createServer(async (request,response) => {
                     
                 })
 
-                request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
+                //request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
                 break;
                 
             case "/main.js":
@@ -222,16 +222,16 @@ const server = http.createServer(async (request,response) => {
                 break;
 
             case "/api/books":
-                console.log("Entrando em /api/books")
-                console.log("Verificando a request: " + request.method)
-                console.log("Verificando a request: " + request.httpVersion)
+                //console.log("Entrando em /api/books")
+                //console.log("Verificando a request: " + request.method)
+                //console.log("Verificando a request: " + request.httpVersion)
                 response.setHeader("Content-type","application/json")
                 response.writeHead(200)
                 const json_stringified = JSON.stringify({result : "Ding din Ding din sou foda" })
                 
                 Book.findAll({where : {}})
                     .then(e => {
-                        console.log(JSON.stringify(e))
+                        //console.log(JSON.stringify(e))
                         response.end(JSON.stringify(e))
                     })
 
@@ -240,10 +240,10 @@ const server = http.createServer(async (request,response) => {
 
             case "/api/choose_book":
                 var body_as_string = "";
-                console.log("Verificando a request: " + request.method)
-                console.log("Verificando a request: " + request.httpVersion)
+                //console.log("Verificando a request: " + request.method)
+                //console.log("Verificando a request: " + request.httpVersion)
                 request.on('data',chunk => {
-                    console.log("Chamando uma chunk")
+                    //console.log("Chamando uma chunk")
                     body_as_string += chunk
                 })
 
@@ -251,7 +251,7 @@ const server = http.createServer(async (request,response) => {
                     
                     //Implementação do recurso
                     const json = JSON.parse(body_as_string)
-                    console.log(json)
+                    //console.log(json)
 
                     // await choose_book();
 
@@ -271,34 +271,34 @@ const server = http.createServer(async (request,response) => {
 
                     // Book.findOne({where : { id : json.id}})
                     //     .then(the_book_one => {
-                    //         console.log(the_book_one)
+                    ////         console.log(the_book_one)
                     //     })
                     
                     
                 })
 
-                request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
+                //request.on('error',err => console.log("Algo de errado no método POST não está certo: " + err))
                 break;
 
 
             case "/api/request_books":
                 var body_as_string = "";
-                console.log("Rota " + "/api/request_books")
+                //console.log("Rota " + "/api/request_books")
                 request.on('data',chunk => {
-                    console.log("Chamando uma chunk")
+                    //console.log("Chamando uma chunk:" + chunk)
                     body_as_string += chunk 
                     
-                    console.log("content-as-string: " + body_as_string)
+                    //console.log("content-as-string: " + body_as_string)
                 })
                 
                 
 
                 request.on('end',async () => {
-                    console.log("final: " + body_as_string)
+                    //console.log("final: " + body_as_string)
                     var { userId } = JSON.parse(body_as_string)
                     
                     userId = Number(userId)
-                    console.log("type: " + typeof(userId))
+                    //console.log("type: " + typeof(userId))
 
                     response.setHeader("Content-type","application/json")
                     response.writeHead(200)
@@ -313,12 +313,15 @@ const server = http.createServer(async (request,response) => {
                 response.setHeader("Content-type","application/json")
 
                 request.on('data',chunk => {
-                    console.log("chunks")
+                    console.log("chunks!@!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     body_as_string += chunk
                 })
 
                 request.on('end',() => {
+
+                    console.log("finish of parsing:" + body_as_string )
                     var body_parsed = JSON.parse(body_as_string)
+                    
                     response.writeHead(200)
                     response.end(body_as_string)
 
@@ -352,8 +355,8 @@ const server = http.createServer(async (request,response) => {
 
 
 server.listen(port,host, () => {
-    console.log("Servidor está rodando na em http://" + host + ":" + port);
-    console.log("Olá mundo " + pages_directory);
+    //console.log("Servidor está rodando na em http://" + host + ":" + port);
+    //console.log("Olá mundo " + pages_directory);
 })
 
 
@@ -364,7 +367,7 @@ async function search_book_user(userId) {
 
     var response = await Book.findAll({ where: { userId } });
     var data_parsed = JSON.parse(JSON.stringify(response));
-    console.log(data_parsed);
+    //console.log(data_parsed);
     return {
         ...data_parsed,
         withUser : userId,
@@ -379,9 +382,9 @@ async function choose_book({userId, bookId}) {
     var hasReservation = c.length > 0;
 
     if (!hasReservation) {
-        console.log("há uma reserva");
+        //console.log("há uma reserva");
     } else {
-        console.warn("Não deveria chegar aqui, não deveria existir um livro já reservado visível na dashboard");
+        //console.warn("Não deveria chegar aqui, não deveria existir um livro já reservado visível na dashboard");
 
         // checar como eu deveria retornar o status code nesse caso !!
         return {
