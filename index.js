@@ -35,6 +35,7 @@ const styles = [
 
 const scripts = {
     main : fs.readFileSync(join(pages_directory,"main.js"),{encoding : 'utf-8'}),
+    dashboard : fs.readFileSync(join(pages_directory,"dashboard.js"),{encoding : 'utf-8'}),
 }
 
 
@@ -281,12 +282,31 @@ const server = http.createServer(async (request,response) => {
 
 
             case "/api/request_books":
-                
-                response.setHeader("Content-type","application/json")
+                var body_as_string = "";
+
+                request.on('data',chunk => {
+                    console.log("Chamando uma chunk")
+                    body_as_string += chunk
+                })
+
+
+                request.on('end',async () => {
+                    console.log("content-as-string: " + body_as_string)
+                    var { userId } = JSON.parse(body_as_string)
+
+                    response.setHeader("Content-type","application/json")
+                    response.writeHead(200)
+                    response.end(JSON.stringify(await search_book_user(userId)));
+                })
+                break;
+
+
+            case "/scripts/dashboard.js":
+                response.setHeader("Content-type","text/javascript")
                 response.writeHead(200)
-                response.end(JSON.stringify(await search_book_user(userId)));
-
-
+                var content = scripts.dashboard
+                response.end(content)
+                break;
             default:
                 response.writeHead(404)
                 response.end("Algo de errado não está certo, a página não foi encontrada","utf-8")
@@ -305,13 +325,16 @@ server.listen(port,host, () => {
 
 
 
-async function search_book_user(userId = 1) {    
+async function search_book_user(userId) {    
     var bookId = 1;
 
     var response = await Book.findAll({ where: { userId } });
     var data_parsed = JSON.parse(JSON.stringify(response));
     console.log(data_parsed);
-    return data_parsed
+    return {
+        ...data_parsed,
+        withUser : userId,
+    }
 }
 var userId = 1;
 
