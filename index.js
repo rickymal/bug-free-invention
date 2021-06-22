@@ -3,10 +3,10 @@ import fs from "fs";
 import path, { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { Route } from './services/Route.js'
+import { log, end } from './services/Log.js'
 
-const log = (msg) => console.log(msg)
 
-const log = (type, msg) => console.log(`[${type}] : `)
+
 import {User, Book, Reservation} from './database.js'
 /*
 The user represent the User
@@ -14,7 +14,7 @@ The book represent the Book
 Reservation Represents the reservations of a book by an user 
 */
 
-import { composeJSON } from './services/composeJSON.js'
+import { composeJSON } from './services/ComposeJSON.js'
 // function responsible for make a conversion to the datagram received at front-end to JSON format 
 
 import {search_book_user, choose_book} from './controllers/UserController.js'
@@ -51,15 +51,15 @@ styles_names.forEach(e => {
 
 scripts_names.forEach(e => {
   const pages_directory = join(__dirname,"src","scripts",);
-  pages[e.split('.')[0]] = fs.readFileSync(join(pages_directory, e), {encoding : 'utf-8'})  
+  scripts[e.split('.')[0]] = fs.readFileSync(join(pages_directory, e), {encoding : 'utf-8'})  
 })
 
+// as variáveis 'pages','styles,'scripts' são objetos contento as páginas, estilos, e scripts respectivamente
 /* Definição das rotas */
 
 // rota das páginas
 const route = new Route()
 route.insert('/', (request,response) => {
-    console.log("Entrando na rota")
     response.writeHead(200)
     response.end("Entrando na rota principal")
     return 0;
@@ -73,8 +73,10 @@ route.insert('/index',function(request,response) {
     response.end(pages.index);
 })
 route.insert('/dashboard',function(request,response) {
+    
     response.setHeader("Content-type", "text/html");
     response.writeHead(200);
+    
     response.end(pages.dashboard);
 })
 route.insert('/registration',function(request,response) {
@@ -187,16 +189,20 @@ route.insert('/api/add_title', function (request, response) {
 })
 
 // rota dos scripts 
-route.insert('/script/main.js',function(request, response) {
+route.insert('/scripts/main.js',function(request, response) {
   response.setHeader("Content-type", "text/javascript");
   response.writeHead(200);
   response.end(scripts.main);
+  
+  
 })
 
 route.insert('/scripts/dashboard.js', function (request, response) {
   response.setHeader("Content-type", "text/javascript");
   response.writeHead(200);
   response.end(scripts.dashboard);
+  
+  
 
 })
 route.default(function (request, response) {
@@ -210,22 +216,26 @@ route.default(function (request, response) {
 
 /* Server configuration and routing */
 
-function sleep(time, callback) {
-  var stop = new Date().getTime();
-  while(new Date().getTime() < stop + time) {
-      ;
-  }
+// function sleep(time, callback) {
+//   var stop = new Date().getTime();
+//   while(new Date().getTime() < stop + time) {
+//       ;
+//   }
   
-}
+// }
 
 
-sleep(1000)
-log("-----------------------------------------------------")
+// sleep(1000)
+
 const server = http.createServer((request, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
   response.setHeader("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
-  log("entrando aqui: url:" + request.url)
-
+  end()
+  log("server","Recebendo requisição do servidor")
+  log("server","método: " + request.method)
+  log("server","rota: " + request.url)
+  
+  
   
   var function_response_from_routing = route.routers.get(request.url)
   if (typeof(function_response_from_routing) == 'function') {
