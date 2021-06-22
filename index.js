@@ -5,10 +5,18 @@ const host = "localhost";
 
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-
 import pkg from "sequelize";
-
 const { Sequelize, Model, DataTypes } = pkg;
+
+
+import {User, Book, Reservation} from './database'
+/*
+The user represent the User '-'
+The book represent the Book
+Reservation Represents the reservations of a book by an user 
+*/
+
+
 
 /* Global variables */
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -47,87 +55,37 @@ const scripts = {
   }),
 };
 
-/* Database space */
+class Route {
+  constructor() {
+    this.routers = Map()
+  }
 
-const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: "database.sqlite",
-});
+  insert(path,definition) {
+    this.routers.set(path,definition)
+  }
 
-class User extends Model {}
 
-class Book extends Model {}
+  getRequest(request,response) {
 
-class Reservation extends Model {}
-
-var dt = DataTypes;
-User.init(
-  {
-    email: dt.STRING,
-    password: dt.STRING,
-  },
-  { sequelize, modelName: "user" }
-);
-
-Book.init(
-  {
-    title: dt.STRING,
-    description: dt.TEXT,
-  },
-  { sequelize, modelName: "book" }
-);
-
-Reservation.init({}, { sequelize, modelName: "reservation" });
-
-User.hasMany(Book);
-Book.belongsTo(User, {
-  foreignKey: {
-    allowNull: true,
-  },
-  constraints: true,
-});
-
-User.hasMany(Reservation);
-Reservation.belongsTo(User);
-
-Book.hasOne(Reservation);
-Reservation.belongsTo(Book);
-
-async function initializeSequelize() {
-  await sequelize.sync({ force: true });
+  }
 }
 
-await initializeSequelize();
 
-const rique_user = await User.create({
-  email: "henriquemauler@gmail.com",
-  password: "123456789",
-});
+const route = new Route()
 
-const another_user = await User.create({
-  email: "anotheremail@tylok.com",
-  password: "123456789",
-});
+route.insert('/', (request,response) => {
+    response.writeHead(200)
+    response.end("Entrando na rota principal")
 
-const book1 = await Book.create({
-  title: "Knowing yourself",
-  description: "This is a book that make you know about yourself better",
-});
-
-const book2 = await Book.create({
-  title: "The narnia Chronics",
-  description: "This is a book that will teach you about a imaginary space",
-});
-
-book1.setUser(rique_user);
-book2.setUser(another_user);
-
-
-
+})
 /* Server configuration and routing */
 const server = http.createServer(async (request, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
   response.setHeader("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
+
+  route.getRequest(request,response)
+
+  
 
   switch (request.url) {
     case "/":
@@ -171,8 +129,7 @@ const server = http.createServer(async (request, response) => {
       break;
 
     case "/api/make_login":
-      var body = "";
-
+      
       composeJSON(request)
         .then(json_result => {
           response.setHeader("Content-type", "text/plain");
@@ -216,12 +173,11 @@ const server = http.createServer(async (request, response) => {
         .then(book_choice => {
           response.setHeader("Content-type", "application/json");
           response.writeHead(200);
-          response.end(book_choice);
-
-          
+          response.end(book_choice);         
         })
         .catch(error => {
-
+          response.write(500)
+          response.end({ error })
         })
 
 
