@@ -66,122 +66,123 @@ class Route {
 
 
   getRequest(request,response) {
-
+      
   }
 }
 
 
 const route = new Route()
 
+
+
+// rota das páginas
+
 route.insert('/', (request,response) => {
     response.writeHead(200)
     response.end("Entrando na rota principal")
+})
 
+route.insert('/index',function(request,response) {
+    response.setHeader("Content-Type", "text/html");
+    response.writeHead(200);
+    response.end(pages.index);
+})
+route.insert('/dashboard',function(request,response) {
+    response.setHeader("Content-type", "text/html");
+    response.writeHead(200);
+    response.end(pages.dashboard);
+})
+route.insert('/registration',function(request,response) {
+    response.setHeader("Content-type", "text/html");
+    response.writeHead(200);
+    response.end(pages.registration);
+})
+
+// rota dos css's
+
+
+route.insert('/styles/main.css',function(request,response) {
+  response.setHeader("Content-Type", "text/css");
+  response.writeHead(200);
+  response.end(styles.main);
+})
+route.insert('/styles/dashboard.css',function(request,response) {
+  response.setHeader("Content-Type", "text/css");
+  response.writeHead(200);
+  response.end(styles.dashboard);
+})
+route.insert('/styles/registration.css',function(request,response) {
+  response.setHeader("Content-Type", "text/css");
+  response.writeHead(200);
+  response.end(styles.registration);
+})
+
+
+// rotas do javascript
+
+
+route.insert('/api/make_login',function(request, response) {
+  composeJSON(request)
+    .then(json_result => {
+      response.setHeader("Content-type", "text/plain");
+      response.writeHead(200);
+      response.end("O conteúdo enviado é: " + body);
+    })
+    .catch(error => {
+      response.setHeader("Content-type", "text/plain");
+      response.writeHead(500)
+    })
+})
+route.insert('/api/books',function(request, response) {
+  response.setHeader("Content-type", "application/json");
+  response.writeHead(200);
+  const json_stringified = JSON.stringify({
+    result: "ok",
+  });
+
+  Book.findAll({ where: {} }).then((e) => {
+    response.end(JSON.stringify(e));
+  });
+})
+route.insert('/api/choose_book',function(request, response) {
+  composeJSON(request)
+    .then(result => {
+      return choose_book(result)
+    })
+    .then(book_choice => {
+      return JSON.stringify(book_choice)
+    })
+    .then(book_choice => {
+      response.setHeader("Content-type", "application/json");
+      response.writeHead(200);
+      response.end(book_choice);         
+    })
+    .catch(error => {
+      response.write(500)
+      response.end({ error })
+    })
+})
+
+
+// rota dos scripts 
+route.insert('/script/main.js',function(request, response) {
+  response.setHeader("Content-type", "text/javascript");
+  response.writeHead(200);
+  response.end(scripts.main);
 })
 /* Server configuration and routing */
+
 const server = http.createServer(async (request, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
   response.setHeader("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
 
-  route.getRequest(request,response)
-
+  
+  route.routers.get(request.url)(request, response)
   
 
   switch (request.url) {
-    case "/":
-      response.writeHead(200);
-      response.end("Entrando na rota principal");
-      break;
+   
 
-    case "/index":
-      response.setHeader("Content-Type", "text/html");
-      response.writeHead(200);
-      response.end(pages.index);
-      break;
-    case "/dashboard":
-      response.setHeader("Content-type", "text/html");
-      response.writeHead(200);
-      response.end(pages.dashboard);
-      break;
-    case "/registration":
-      response.setHeader("Content-type", "text/html");
-      response.writeHead(200);
-      response.end(pages.registration);
-      break;
-
-    case "/main.css":
-      response.setHeader("Content-Type", "text/css");
-
-      response.writeHead(200);
-      response.end(styles.main);
-
-      break;
-    case "/dashboard.css":
-      response.setHeader("Content-Type", "text/css");
-      response.writeHead(200);
-      response.end(styles.dashboard);
-
-      break;
-    case "/registration.css":
-      response.setHeader("Content-Type", "text/css");
-      response.writeHead(200);
-      response.end(styles.registration);
-      break;
-
-    case "/api/make_login":
-      
-      composeJSON(request)
-        .then(json_result => {
-          response.setHeader("Content-type", "text/plain");
-          response.writeHead(200);
-          response.end("O conteúdo enviado é: " + body);
-        })
-        .catch(error => {
-          response.setHeader("Content-type", "text/plain");
-          response.writeHead(500)
-        })
-      break;
-
-    case "/scripts/main.js":
-      response.setHeader("Content-type", "text/javascript");
-      response.writeHead(200);
-      response.end(scripts.main);
-      break;
-
-    case "/api/books":
-      response.setHeader("Content-type", "application/json");
-      response.writeHead(200);
-      const json_stringified = JSON.stringify({
-        result: "ok",
-      });
-
-      Book.findAll({ where: {} }).then((e) => {
-        response.end(JSON.stringify(e));
-      });
-
-      break;
-
-    case "/api/choose_book":
-
-      composeJSON(request)
-        .then(result => {
-          return choose_book(result)
-        })
-        .then(book_choice => {
-          return JSON.stringify(book_choice)
-        })
-        .then(book_choice => {
-          response.setHeader("Content-type", "application/json");
-          response.writeHead(200);
-          response.end(book_choice);         
-        })
-        .catch(error => {
-          response.write(500)
-          response.end({ error })
-        })
-
-
-      break;
 
     case "/api/request_books":
       
@@ -215,51 +216,15 @@ const server = http.createServer(async (request, response) => {
           response.end({error})
         })
 
-
-      // request.on("data", (chunk) => {
-      //   body_as_string += chunk;
-      // });
-
-      // request.on("end", async () => {
-      //   // converter o conteúdo para um formato de json
-
-      //   var object_received = {};
-      //   body_as_string.split("&").forEach((content) => {
-      //     var v = content.split("=");
-      //     object_received[v[0]] = v[1];
-      //   });
-
-      //   try {
-      //     const new_book = await Book.create({
-      //       title: object_received.title,
-      //       description: object_received.description,
-      //       userId: object_received.userId,
-      //     });
-
-      //     var content = JSON.stringify(new_book.toJSON());
-
-      //     response.writeHead(200);
-      //     response.end(content);
-      //   } catch (error) {
-      //     response.writeHead(500);
-      //     response.end(JSON.stringify({ error }));
-      //   }
-      // });
-
-      // request.on("error", (error) => {
-      //   response.setHeader;
-      //   response.writeHead(500);
-      //   response.end("Algo de errado não está certo");
-      // });
-
       break;
 
     case "/scripts/dashboard.js":
       response.setHeader("Content-type", "text/javascript");
       response.writeHead(200);
-      var content = scripts.dashboard;
-      response.end(content);
+      response.end(scripts.dashboard);
       break;
+
+
     default:
       response.writeHead(404);
       response.end(
@@ -271,7 +236,7 @@ const server = http.createServer(async (request, response) => {
 });
 
 // server.listen(port, host, () => {});
-
+/* Controllers */
 async function search_book_user(userId) {
   var response = await Book.findAll({ where: { userId } });
   var data_parsed = JSON.parse(JSON.stringify(response));
