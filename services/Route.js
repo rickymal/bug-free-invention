@@ -6,6 +6,11 @@ export class Route {
     insert(path,definition) {
       this.routers.set(path,definition)
     }
+
+
+    default(definition) {
+        this.routers.set('/error',definition)
+    }
   
   }
   

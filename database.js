@@ -1,3 +1,6 @@
+import pkg from "sequelize";
+const { Sequelize, Model, DataTypes } = pkg;
+
 
 const sequelize = new Sequelize({
     dialect: "sqlite",

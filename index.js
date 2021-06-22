@@ -2,22 +2,22 @@ import http from "http";
 import fs from "fs";
 import path, { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { Route } from './services/Route'
-import pkg from "sequelize";
-const { Sequelize, Model, DataTypes } = pkg;
+import { Route } from './services/Route.js'
 
-import {User, Book, Reservation} from './database'
+
+
+
+import {User, Book, Reservation} from './database.js'
 /*
 The user represent the User
 The book represent the Book
 Reservation Represents the reservations of a book by an user 
 */
 
-import { composeJSON } from './services/composeJSON'
+import { composeJSON } from './services/composeJSON.js'
 // function responsible for make a conversion to the datagram received at front-end to JSON format 
 
-
-import {search_book_user, choose_book} from './controllers/UserController'
+import {search_book_user, choose_book} from './controllers/UserController.js'
 //Controllers 
 
 
@@ -30,64 +30,31 @@ const host = "localhost";
 // ambient configuration
 
 
-pages_names = ["index.html", "dashboard.html","registration.html"]
-styles_names = ["dashboard.css","main.css","registration.css"]
-scripts_names = ["main.js","dashboard.js"]
+const pages_names = ["index.html", "dashboard.html","registration.html"]
+const styles_names = ["dashboard.css","main.css","registration.css"]
+const scripts_names = ["main.js","dashboard.js"]
+// páginas disponíveis para serem acessadas, devem ser configuradas na parte de routing também
 
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const pages_directory = join(__dirname, "pages");
 
 const pages = new Object()
 const styles = new Object()
 const scripts = new Object()
-
-pages_name.forEach(e => {
+pages_names.forEach(e => {
+  const pages_directory = join(__dirname,"src","pages",);
   pages[e.split('.')[0]] = fs.readFileSync(join(pages_directory, e), {encoding : 'utf-8'})  
 })
 
 styles_names.forEach(e => {
+  const pages_directory = join(__dirname,"src","styles",);
   styles[e.split('.')[0]] = fs.readFileSync(join(pages_directory, e), {encoding : 'utf-8'})  
 })
 
 scripts_names.forEach(e => {
+  const pages_directory = join(__dirname,"src","scripts",);
   pages[e.split('.')[0]] = fs.readFileSync(join(pages_directory, e), {encoding : 'utf-8'})  
 })
-
-// const pages = {
-//   index: fs.readFileSync(join(pages_directory, "index.html"), {
-//     encoding: "utf-8",
-//   }),
-//   dashboard: fs.readFileSync(join(pages_directory, "dashboard.html"), {
-//     encoding: "utf-8",
-//   }),
-//   registration: fs.readFileSync(join(pages_directory, "registration.html"), {
-//     encoding: "utf-8",
-//   }),
-// };
-
-
-// const styles = {
-//   dashboard : fs.readFileSync(join(pages_directory, "dashboard.css"), {
-//     encoding: "utf-8" 
-//   }),
-//   main : fs.readFileSync(join(pages_directory, "main.css"), { encoding: "utf-8" }),
-//   registration : fs.readFileSync(join(pages_directory, "registration.css"), {
-//     encoding: "utf-8",
-//   }),
-// }
-
-// const scripts = {
-//   main: fs.readFileSync(join(pages_directory, "main.js"), {
-//     encoding: "utf-8",
-//   }),
-//   dashboard: fs.readFileSync(join(pages_directory, "dashboard.js"), {
-//     encoding: "utf-8",
-//   }),
-// };
-
-
-
 
 /* Definição das rotas */
 
@@ -97,6 +64,8 @@ route.insert('/', (request,response) => {
     response.writeHead(200)
     response.end("Entrando na rota principal")
 })
+// para a rota '/' será executado o comando passado no segundo parâmetro do método 'insert' do objeto route
+
 
 route.insert('/index',function(request,response) {
     response.setHeader("Content-Type", "text/html");
@@ -136,7 +105,6 @@ route.insert('/styles/registration.css',function(request,response) {
 
 // rotas da api
 
-
 route.insert('/api/make_login',function(request, response) {
   composeJSON(request)
     .then(json_result => {
@@ -172,7 +140,11 @@ route.insert('/api/request_books',function(request, response) {
     .then(userId => {
       response.setHeader("Content-type", "application/json");
       response.writeHead(200);
-      response.end(JSON.stringify(await search_book_user(userId)));
+      return search_book_user(userId)
+    })
+    .then(book_found => {
+      response.end(JSON.stringify(book_found));
+      
     })
 })
 
@@ -242,17 +214,5 @@ route.default(function (request, response) {
 const server = http.createServer(async (request, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
   response.setHeader("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
-
-  
   route.routers.get(request.url)(request, response)
-  
-
-  
-
-    
-  
 });
-
-
-
-
