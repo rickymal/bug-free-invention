@@ -228,62 +228,73 @@ const server = http.createServer(async (request, response) => {
       break;
 
     case "/api/request_books":
-      var body_as_string = "";
+      
+      
+      composeJSON(request)
+        .then(result => {
+           return Number(result.userId)
+        })
+        .then(userId => {
+          response.setHeader("Content-type", "application/json");
+          response.writeHead(200);
+          response.end(JSON.stringify(await search_book_user(userId)));
+        })
 
-      request.on("data", (chunk) => {
-        body_as_string += chunk;
-      });
-
-      request.on("end", async () => {
-        var { userId } = JSON.parse(body_as_string);
-
-        userId = Number(userId);
-
-        response.setHeader("Content-type", "application/json");
-        response.writeHead(200);
-        response.end(JSON.stringify(await search_book_user(userId)));
-      });
       break;
 
     case "/api/add_title":
-      var body_as_string = "";
+      
       response.setHeader("Content-type", "application/json");
 
-      request.on("data", (chunk) => {
-        body_as_string += chunk;
-      });
+      composeJSON(request, format = "query")
+        .then(({title, description, userId}) => {
+          return Book.create({title, description, userId})
+        })
+        .then(book_created => {
+          response.writeHead(200)
+          response.end(JSON.stringify(book_created.toJSON()))
+        })
+        .catch(error => {
+          response.writeHead(500)
+          response.end({error})
+        })
 
-      request.on("end", async () => {
-        // converter o conteúdo para um formato de json
 
-        var object_received = {};
-        body_as_string.split("&").forEach((content) => {
-          var v = content.split("=");
-          object_received[v[0]] = v[1];
-        });
+      // request.on("data", (chunk) => {
+      //   body_as_string += chunk;
+      // });
 
-        try {
-          const new_book = await Book.create({
-            title: object_received.title,
-            description: object_received.description,
-            userId: object_received.userId,
-          });
+      // request.on("end", async () => {
+      //   // converter o conteúdo para um formato de json
 
-          var content = JSON.stringify(new_book.toJSON());
+      //   var object_received = {};
+      //   body_as_string.split("&").forEach((content) => {
+      //     var v = content.split("=");
+      //     object_received[v[0]] = v[1];
+      //   });
 
-          response.writeHead(200);
-          response.end(content);
-        } catch (error) {
-          response.writeHead(500);
-          response.end(JSON.stringify({ error }));
-        }
-      });
+      //   try {
+      //     const new_book = await Book.create({
+      //       title: object_received.title,
+      //       description: object_received.description,
+      //       userId: object_received.userId,
+      //     });
 
-      request.on("error", (error) => {
-        response.setHeader;
-        response.writeHead(500);
-        response.end("Algo de errado não está certo");
-      });
+      //     var content = JSON.stringify(new_book.toJSON());
+
+      //     response.writeHead(200);
+      //     response.end(content);
+      //   } catch (error) {
+      //     response.writeHead(500);
+      //     response.end(JSON.stringify({ error }));
+      //   }
+      // });
+
+      // request.on("error", (error) => {
+      //   response.setHeader;
+      //   response.writeHead(500);
+      //   response.end("Algo de errado não está certo");
+      // });
 
       break;
 
@@ -347,7 +358,7 @@ const compile = (param) => JSON.stringify(content(JSON.parse(param)));
 
 
 
-function composeJSON(request) {
+function composeJSON(request, format = "json") {
   return new Promise(function(resolve,reject){
     var body_parsed = ""
     request.on('data',chunk => {
@@ -355,7 +366,19 @@ function composeJSON(request) {
     })
 
     request.on('end',() => {
-        resolve(JSON.parse(body_parsed))
+        if(format == 'json') {
+          resolve(JSON.parse(body_parsed))
+        } else if(format == 'query') {
+          transpiled_object = {}
+          body_parsed.split("&").forEach((content) => {
+            var key_value_pair = content.split("=");
+            transpiled_object[key_value_pair[0]] = key_value_pair[1];
+          });
+
+          resolve(transpiled_object)
+        } else {
+          reject(new Error("Format parameter don't recognized"))
+        }
     })
 
     request.on('error',error => {
