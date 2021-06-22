@@ -9,7 +9,7 @@ export class Route {
 
 
     default(definition) {
-        this.routers.set('/error',definition)
+        this.routers.set(NaN,definition)
     }
   
   }
