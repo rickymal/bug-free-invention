@@ -4,9 +4,9 @@ import path, { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { Route } from './services/Route.js'
 
+const log = (msg) => console.log(msg)
 
-
-
+const log = (type, msg) => console.log(`[${type}] : `)
 import {User, Book, Reservation} from './database.js'
 /*
 The user represent the User
@@ -19,8 +19,6 @@ import { composeJSON } from './services/composeJSON.js'
 
 import {search_book_user, choose_book} from './controllers/UserController.js'
 //Controllers 
-
-
 
 
 /* Global variables */
@@ -61,8 +59,10 @@ scripts_names.forEach(e => {
 // rota das páginas
 const route = new Route()
 route.insert('/', (request,response) => {
+    console.log("Entrando na rota")
     response.writeHead(200)
     response.end("Entrando na rota principal")
+    return 0;
 })
 // para a rota '/' será executado o comando passado no segundo parâmetro do método 'insert' do objeto route
 
@@ -205,14 +205,35 @@ route.default(function (request, response) {
     "Algo de errado não está certo, a página não foi encontrada",
     "utf-8"
   ); 
-
 });
 
 
 /* Server configuration and routing */
 
-const server = http.createServer(async (request, response) => {
+function sleep(time, callback) {
+  var stop = new Date().getTime();
+  while(new Date().getTime() < stop + time) {
+      ;
+  }
+  
+}
+
+
+sleep(1000)
+log("-----------------------------------------------------")
+const server = http.createServer((request, response) => {
   response.setHeader("Access-Control-Allow-Origin", "*");
   response.setHeader("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
-  route.routers.get(request.url)(request, response)
+  log("entrando aqui: url:" + request.url)
+
+  
+  var function_response_from_routing = route.routers.get(request.url)
+  if (typeof(function_response_from_routing) == 'function') {
+    function_response_from_routing(request,response)
+  } else {
+    response.writeHead(500)
+    response.end("Something goes wrong, the requested url isn't recognized")
+  }
 });
+
+server.listen(port,host)
