@@ -14,3 +14,4 @@
 - [ ] A dashboard também retorna os livros do usuário, Isso deve ser corrigido quando for inserido um sistema de autenticação
 - [X] O comando Choose_book não está funcionando (quando se clica em reservar títulos, descobrir o que é)
 - [ ] Adicionar na dashboard o livro que atualmente está sendo utilizado e uma opção para 'devolver o livro
+- [ ] Fazer o request dos livros na dashboard (ou apenas conecta-los corretamente nas rotas)

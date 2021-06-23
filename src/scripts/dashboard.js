@@ -15,8 +15,16 @@ function get_data() {
   headers.append("Content-type", "application/json");
   var options = { method, mode, cache, body, headers };
 
-  var requestOptions = new Request("/api/request_books", options);
+  var reserved_books = new Request('/api/request_reserved_books', options) 
 
+  fetch(reserved_books)
+    .then(e => {
+      console.log("Conteúdo!!!!!!!!!!!!!!!!!!!!!")
+      console.log(e)
+    })
+
+
+  var requestOptions = new Request("/api/request_owner_books", options);
   fetch(requestOptions)
     .then(async (response) => {
       return response.json();
@@ -40,11 +48,49 @@ function get_data() {
     .catch(async (error) => {});
 }
 
+function request_reserved_title() {
+
+}
+
+function request_owner_title () {
+
+}
+
 function onLoad() {
   // adicionar o userId do usuário
   var form_doc = document.getElementById("hidden-input-user-id");
   form_doc.setAttribute("value", userId.toString());
+
+  request_reserved_title()
+  request_owner_title()
 }
+
+// capturar os elementos
+
+document.querySelector("form").addEventListener("submit", function (e) {
+  e.preventDefault();
+  const form_parsed = Object.fromEntries(new FormData(e.target));
+
+  var method = "POST";
+  var mode = "no-cors";
+  var cache = "default";
+  var headers = new Headers();
+  var body = JSON.stringify(form_parsed);
+  headers.append("Content-type", "application/json");
+
+  var options = { method, mode, cache, body, headers };
+  var requestOptions = new Request("/api/add_title", options);
+
+  fetch(requestOptions)
+    .then((e) => {
+      if (e.status == 200) {
+        alert("Livro adicionado com sucesso!");
+      }
+    })
+    .catch((err) => console.log("Error: " + err));
+});
+
+// var formData = new FormData(document.querySelector('form'))
 
 // declarar os eventos
 window.onload = onLoad;

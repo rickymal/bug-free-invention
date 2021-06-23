@@ -149,7 +149,7 @@ route.insert("/api/books", function (request, response) {
     });
 });
 
-route.insert("/api/request_books", function (request, response) {
+route.insert("/api/request_owner_books", function (request, response) {
   composeJSON(request)
     .then((result) => {
       return Number(result.userId);
@@ -192,7 +192,7 @@ route.insert("/api/choose_book", function (request, response) {
 route.insert("/api/add_title", function (request, response) {
   response.setHeader("Content-type", "application/json");
   console.log('chamando método add_title')
-  composeJSON(request, "query")
+  composeJSON(request, "json")
     .then(({ title, description, userId }) => {
       return Book.create({ title, description, userId });
     })
@@ -206,6 +206,14 @@ route.insert("/api/add_title", function (request, response) {
     });
 });
 
+
+route.insert('/api/request_reserved_books', function (request, response) {
+  response.setHeader("Content-type",'application/json')
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+  response.writeHead(200)
+  response.end(JSON.stringify({status : "OK"}))
+})
+
 // rota dos scripts
 route.insert("/scripts/main.js", function (request, response) {
   response.setHeader("Content-type", "text/javascript");
@@ -218,6 +226,7 @@ route.insert("/scripts/dashboard.js", function (request, response) {
   response.writeHead(200);
   response.end(scripts.dashboard);
 });
+
 route.default(function (request, response) {
   response.writeHead(404);
   response.end(
@@ -225,6 +234,8 @@ route.default(function (request, response) {
     "utf-8"
   );
 });
+
+
 
 /* Server configuration and routing */
 
