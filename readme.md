@@ -9,3 +9,4 @@
 - [X] Realizar um filtro para que apenas os livros não reservados apareçam na dashboard
 - [X] Verificar qual o corretor status code para retornar na função choose_book quando o usuário não puder selecionar mais de um livro
 - [X] Descobrir porque na dashboard.js eu precisei tirar o objeto dentro de um outro {0 : {}}
+- [ ] No Dashboard.js retirar a autenticação com userId = 1 (esta habilitado apenas para testes)

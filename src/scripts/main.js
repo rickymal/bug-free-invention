@@ -4,7 +4,7 @@ function onLoad() {
   fetch_list_of_books();
 }
 
-// função disparada quando o usuário clica no card para 
+// função disparada quando o usuário clica no card para
 function reserve_book(bookId) {
   var method = "POST";
   var mode = "no-cors";
@@ -49,7 +49,6 @@ function fetch_list_of_books() {
   const division = document.getElementById("flex-row-content");
   fetch(requestOptions)
     .then((data) => {
-      
       return data.json();
     })
     .then((e) => {
