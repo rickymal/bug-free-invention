@@ -33,7 +33,7 @@ end
 
 group Apagar um titulo
 controller -> dash : Buscar todos os titulos do usuario
-dash -> controller : apagar os títulos
+dash -> controller : apagar os titulos
 end
 
 group Adicionar um titulo
