@@ -52,30 +52,68 @@ async function initializeSequelize() {
 
 await initializeSequelize();
 
-const rique_user = await User.create({
+const henrique = await User.create({
   email: "henriquemauler@gmail.com",
   password: "123456789",
 });
 
-const another_user = await User.create({
+const pamela = await User.create({
   email: "anotheremail@tylok.com",
   password: "123456789",
 });
 
-const book1 = await Book.create({
+const gustavo = await User.create({
+  email : "gustavo@tylok.com",
+  password : "123456789"
+})
+
+
+
+// criando os livros
+
+const knowing_yourself = await Book.create({
   title: "Knowing yourself",
   description: "This is a book that make you know about yourself better",
 });
 
-const book2 = await Book.create({
+const The_narina_Chronics = await Book.create({
   title: "The narnia Chronics",
   description: "This is a book that will teach you about a imaginary space",
 });
 
-book1.setUser(rique_user);
-book2.setUser(another_user);
+const Homo_Sapiens = await Book.create({
+  title : "The homo Sapiens story",
+  description : "The history of homo sapiens is good",
+})
+
+const Homo_Deus = await Book.create( {
+  title : "Homo Deus",
+  description : "The homo Deus content"
+})
+
+const Linux_discovering = await Book.create({
+  title : "Discovering linux",
+  description :  "This is an book for discovering the linux",
+})
+
+
+
+
+knowing_yourself.setUser(henrique);
+The_narina_Chronics.setUser(henrique); // alugado
+
+Homo_Sapiens.setUser(pamela)
+Homo_Deus.setUser(pamela)
+
+
+Linux_discovering.setUser(gustavo) //alugado
+
+// Reservation.create({
+//   userId: henrique.id,
+//   bookId: Linux_discovering.id,
+// });
 
 Reservation.create({
-  userId: rique_user.id,
-  bookId: book1.id,
-});
+  userId : pamela.id,
+  bookId : The_narina_Chronics.id,
+})

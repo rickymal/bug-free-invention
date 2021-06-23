@@ -24,7 +24,7 @@ function get_data() {
     .then(async (lof_response_parsed) => {
       var card_document = document.getElementById("flex-row-content");
 
-      lof_response_parsed.map((response_parsed) => {
+      lof_response_parsed.forEach((response_parsed) => {
         card_document.innerHTML += `
           <div class='card' id = id-${response_parsed.id}>
               <div class="text-content" style="background-color: aqua;">

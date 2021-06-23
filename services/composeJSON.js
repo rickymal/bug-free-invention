@@ -11,7 +11,7 @@ export function composeJSON(request, format = "json") {
           if(format == 'json') {
             resolve(JSON.parse(body_parsed))
           } else if(format == 'query') {
-            transpiled_object = {}
+            let transpiled_object = {}
             body_parsed.split("&").forEach((content) => {
               var key_value_pair = content.split("=");
               transpiled_object[key_value_pair[0]] = key_value_pair[1];

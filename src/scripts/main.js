@@ -10,7 +10,7 @@ function reserve_book(bookId) {
   var mode = "no-cors";
   var cache = "default";
   var headers = new Headers();
-  var userId = localStorage.getItem("userId");
+  var userId = Number(localStorage.getItem("userId"));
   var body = JSON.stringify({ id: bookId, userId: userId });
   var requestOptions = new Request("/api/choose_book", {
     method,
@@ -30,8 +30,11 @@ function reserve_book(bookId) {
       if (f.status == "Added successful") {
         var div_to_delete = document.getElementById("div-" + bookId);
         div_to_delete.remove();
+      } else {
+        alert("O usuário só pode escolher um livro por vez, 'devolva' o livro antes de obter mais um")
       }
-    });
+    })
+    .catch(err => console.log("Error: " + err))
 }
 
 function fetch_list_of_books() {

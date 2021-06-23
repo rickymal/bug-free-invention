@@ -138,10 +138,13 @@ route.insert("/api/books", function (request, response) {
       const dt = e.map((f) => {
         return f.bookId;
       });
-
+      // console.log("lista de livros")
+      // console.log(dt)
       return Book.findAll({ where: { id: { [Op.notIn]: dt } } });
     })
     .then((e) => {
+      // console.log("lista resultante")
+      // console.log(e)
       response.end(JSON.stringify(e));
     });
 });
@@ -164,9 +167,15 @@ route.insert("/api/request_books", function (request, response) {
 route.insert("/api/choose_book", function (request, response) {
   composeJSON(request)
     .then((result) => {
+      // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+      // console.log(typeof result)
+      // console.log(result)
       return choose_book(result);
     })
     .then((book_choice) => {
+      // console.log('book choice')
+      // console.log(typeof book_choice)
+      // console.log(book_choice)
       return JSON.stringify(book_choice);
     })
     .then((book_choice) => {
@@ -182,8 +191,8 @@ route.insert("/api/choose_book", function (request, response) {
 
 route.insert("/api/add_title", function (request, response) {
   response.setHeader("Content-type", "application/json");
-
-  composeJSON(request, (format = "query"))
+  console.log('chamando método add_title')
+  composeJSON(request, "query")
     .then(({ title, description, userId }) => {
       return Book.create({ title, description, userId });
     })
