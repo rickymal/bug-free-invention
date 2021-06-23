@@ -38,7 +38,7 @@ end
 
 group Adicionar um titulo
 controller -> dash : Buscar todos os titulos
-dash -> controller : Aplicar as alterações desejadas
+dash -> controller : Aplicar as alteracoes desejadas
 end
 
 

@@ -7,7 +7,7 @@ import { log, end } from './services/Log.js'
 
 
 
-import {User, Book, Reservation} from './database.js'
+import {User, Book, Reservation, sequelize_content} from './database.js'
 /*
 The user represent the User
 The book represent the Book
@@ -28,8 +28,8 @@ const host = "localhost";
 // ambient configuration
 
 
-const pages_names = ["index.html", "dashboard.html","registration.html"]
-const styles_names = ["dashboard.css","main.css","registration.css"]
+const pages_names = ["index.html", "dashboard.html","login.html"]
+const styles_names = ["dashboard.css","main.css","login.css"]
 const scripts_names = ["main.js","dashboard.js"]
 // páginas disponíveis para serem acessadas, devem ser configuradas na parte de routing também
 
@@ -85,6 +85,12 @@ route.insert('/registration',function(request,response) {
     response.end(pages.registration);
 })
 
+route.insert("/login", function(request, response) {
+  response.setHeader("Content-type","text/html")
+  response.writeHead(200)
+  response.end(pages.login)
+})
+
 // rota dos css's
 
 
@@ -103,7 +109,11 @@ route.insert('/styles/registration.css',function(request,response) {
   response.writeHead(200);
   response.end(styles.registration);
 })
-
+route.insert('/styles/login.css',function(request,response) {
+  response.setHeader("Content-Type", "text/css");
+  response.writeHead(200);
+  response.end(styles.login);
+})
 
 // rotas da api
 
@@ -120,7 +130,7 @@ route.insert('/api/make_login',function(request, response) {
     })
 })
 
-
+const Op = sequelize_content.Op
 route.insert('/api/books',function(request, response) {
   response.setHeader("Content-type", "application/json");
   response.writeHead(200);
@@ -128,7 +138,15 @@ route.insert('/api/books',function(request, response) {
     result: "ok",
   });
 
+  Reservation.findAll({ where : {userId : {[Op.not] : NaN }}}).then(e => {
+      console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+      console.log(e.toJSON())
+  })
+
   Book.findAll({ where: {} }).then((e) => {
+
+
+
     response.end(JSON.stringify(e));
   });
 })
@@ -201,8 +219,7 @@ route.insert('/scripts/dashboard.js', function (request, response) {
   response.setHeader("Content-type", "text/javascript");
   response.writeHead(200);
   response.end(scripts.dashboard);
-  
-  
+   
 
 })
 route.default(function (request, response) {
@@ -216,15 +233,6 @@ route.default(function (request, response) {
 
 /* Server configuration and routing */
 
-// function sleep(time, callback) {
-//   var stop = new Date().getTime();
-//   while(new Date().getTime() < stop + time) {
-//       ;
-//   }
-  
-// }
-
-
 // sleep(1000)
 
 const server = http.createServer((request, response) => {
@@ -234,8 +242,6 @@ const server = http.createServer((request, response) => {
   log("server","Recebendo requisição do servidor")
   log("server","método: " + request.method)
   log("server","rota: " + request.url)
-  
-  
   
   var function_response_from_routing = route.routers.get(request.url)
   if (typeof(function_response_from_routing) == 'function') {

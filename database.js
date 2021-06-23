@@ -1,6 +1,7 @@
 import pkg from "sequelize";
-const { Sequelize, Model, DataTypes } = pkg;
+const { Sequelize, Model, DataTypes, Op } = pkg;
 
+export const sequelize_content = pkg
 
 const sequelize = new Sequelize({
     dialect: "sqlite",
@@ -8,12 +9,11 @@ const sequelize = new Sequelize({
   });
   
   export class User extends Model {}
-  
   export class Book extends Model {}
-  
   export class Reservation extends Model {}
   
   var dt = DataTypes;
+
   User.init(
     {
       email: dt.STRING,
@@ -74,3 +74,9 @@ const sequelize = new Sequelize({
   
   book1.setUser(rique_user);
   book2.setUser(another_user);
+
+
+  Reservation.create({
+    userId : rique_user.id,
+    bookId : book1.id
+  })

@@ -1,15 +1,18 @@
+import  {Book, User, Reservation } from '../database.js'
+
 
 export async function search_book_user(userId) {
-    var response = await Book.findAll({ where: { userId } });
+    var response = await Book.findAll({ where: { userId,  } });
     var data_parsed = JSON.parse(JSON.stringify(response));
   
+
     return {
       ...data_parsed,
       withUser: userId,
     };
   }
   
-
+  
 // o usuário de id 'userId' seleciona o livro de id 'bookId'
 export async function choose_book({ userId, bookId }) {
 var c = await Reservation.findAll({ where: { userId } });
