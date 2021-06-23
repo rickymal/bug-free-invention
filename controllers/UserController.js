@@ -4,12 +4,9 @@ import  {Book, User, Reservation } from '../database.js'
 export async function search_book_user(userId) {
     var response = await Book.findAll({ where: { userId,  } });
     var data_parsed = JSON.parse(JSON.stringify(response));
-  
-
-    return {
-      ...data_parsed,
-      withUser: userId,
-    };
+    console.log('search_book_user')
+    console.log(data_parsed)
+    return data_parsed
   }
   
   

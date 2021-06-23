@@ -138,23 +138,45 @@ route.insert('/api/books',function(request, response) {
     result: "ok",
   });
 
-  Reservation.findAll({ where : {userId : {[Op.not] : NaN }}}).then(e => {
-      console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-      console.log(e.toJSON())
-  })
+  // Reservation.findAll({ where : {userId : {[Op.not] : NaN }}}).then(e => {
+      // // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+      // // console.log(e.toJSON())
+  // })
 
-  Book.findAll({ where: {} }).then((e) => {
+  // // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!")
 
+  Reservation.findAll({where : {}})
+    .then(e => {
+      
+      const dt = e.map(f => {
+        return f.bookId
+      })
+      
+      
+      // console.log("resultado do transpile")
+      // console.log(dt)
+      return Book.findAll({ where : {id : {[Op.notIn] : dt}}})
 
+    })  
+    .then(e => {
+      // console.log("resultado 2")
+      // console.log(typeof e)
+      response.end(JSON.stringify(e))
+    })
 
-    response.end(JSON.stringify(e));
-  });
+  
+  // Book.findAll({ where: {} }).then((e) => {
+  //   response.end(JSON.stringify(e));
+  // });
 })
 
 
 route.insert('/api/request_books',function(request, response) {
+  // console.log("!!!!!!!!!!!!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@!!!!!!!")
   composeJSON(request)
     .then(result => {
+      // console.log("conteúdo do request")
+      // console.log(result)
         return Number(result.userId)
     })
     .then(userId => {
@@ -163,8 +185,9 @@ route.insert('/api/request_books',function(request, response) {
       return search_book_user(userId)
     })
     .then(book_found => {
+      // console.log('content founded')
+      // console.log(book_found)
       response.end(JSON.stringify(book_found));
-      
     })
 })
 
@@ -183,7 +206,7 @@ route.insert('/api/choose_book',function(request, response) {
       response.end(book_choice);         
     })
     .catch(error => {
-      response.write(500)
+      response.write(418)
       response.end({ error })
     })
 })

@@ -49,6 +49,7 @@ function fetch_list_of_books() {
   const division = document.getElementById("flex-row-content");
   fetch(requestOptions)
     .then((data) => {
+      
       return data.json();
     })
     .then((e) => {
