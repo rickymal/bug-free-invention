@@ -28,7 +28,6 @@ function delete_owner_book(bookId, userId) {
       // //console.log("content resultaasddiashduiadahiudhaaaaaaaaaaaaaaaa")
       // console.log("final content")
       document.getElementById("id-" + bookId).remove();
-      alert("Livro apagado com sucesso");
     });
 }
 
@@ -48,7 +47,11 @@ function devolve_reserved_book(bookId, userId) {
 
   fetch(requestOptions).then((e) => {
     console.log(e);
-  });
+    return e.json()
+  })
+  .then(({bookId, userId, status }) => {
+    document.getElementById('id-' + bookId).remove()
+  })
 }
 
 function request_owner_title() {
@@ -162,9 +165,30 @@ document.querySelector("form").addEventListener("submit", function (e) {
 
   fetch(requestOptions).then((e) => {
     if (e.status == 200) {
-      alert("Livro adicionado com sucesso!");
+      return e.json()
     }
-  });
+  })
+  .then(response_parsed => {
+    var component_as_string = `
+      <div class='card' id = id-${response_parsed.id}>
+        <div class="text-content" style="background-color: aqua;">
+          <h1>${response_parsed.title}</h1>
+          <text>${response_parsed.description}</text>
+        </div>
+      <button onclick = "delete_owner_book(${response_parsed.id}, ${userId})">Excluir título</button>        
+      </div>  
+      
+    `;
+    var card_document = document.getElementById('flex-row-content')
+    var new_document = document.createElement("div");
+    new_document.innerHTML = component_as_string;
+    // card_document.insertBefore(new_document, card_document.firstChild);
+    
+    card_document.appendChild(new_document)
+
+  
+
+  })
   // //.catch((err) => console.log("Error: " + err));
 });
 
