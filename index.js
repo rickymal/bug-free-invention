@@ -15,7 +15,7 @@ Reservation Represents the reservations of a book by an user
 import { composeJSON } from "./services/ComposeJSON.js";
 // function responsible for make a conversion to the datagram received at front-end to JSON format
 
-import { search_book_user, choose_book } from "./controllers/UserController.js";
+import { search_owner_book_user, search_reserved_book_user, choose_book } from "./controllers/UserController.js";
 //Controllers
 
 /* Global variables */
@@ -157,12 +157,32 @@ route.insert("/api/request_owner_books", function (request, response) {
     .then((userId) => {
       response.setHeader("Content-type", "application/json");
       response.writeHead(200);
-      return search_book_user(userId);
+      return search_owner_book_user(userId);
     })
     .then((book_found) => {
       response.end(JSON.stringify(book_found));
     });
 });
+
+
+route.insert("/api/request_reserved_books", function (request, response) {
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+  composeJSON(request)
+    .then((result) => {
+      return Number(result.userId);
+    })
+    .then((userId) => {
+      response.setHeader("Content-type", "application/json");
+      response.writeHead(200);
+      
+      return search_reserved_book_user(userId);
+    })
+    .then((book_found) => {
+      response.end(JSON.stringify(book_found));
+    });
+});
+
+
 
 route.insert("/api/choose_book", function (request, response) {
   composeJSON(request)
@@ -207,12 +227,7 @@ route.insert("/api/add_title", function (request, response) {
 });
 
 
-route.insert('/api/request_reserved_books', function (request, response) {
-  response.setHeader("Content-type",'application/json')
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-  response.writeHead(200)
-  response.end(JSON.stringify({status : "OK"}))
-})
+
 
 // rota dos scripts
 route.insert("/scripts/main.js", function (request, response) {

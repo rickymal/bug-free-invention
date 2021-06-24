@@ -108,10 +108,10 @@ Homo_Deus.setUser(pamela)
 
 Linux_discovering.setUser(gustavo) //alugado
 
-// Reservation.create({
-//   userId: henrique.id,
-//   bookId: Linux_discovering.id,
-// });
+Reservation.create({
+  userId: henrique.id,
+  bookId: Linux_discovering.id,
+});
 
 Reservation.create({
   userId : pamela.id,
