@@ -1,9 +1,10 @@
+import { log } from "../services/Log.js"
 
 
 export function composeJSON(request, format = "json") {
-    return new Promise(function(resolve,reject){
-      var body_parsed = ""
-      request.on('data',chunk => {
+  return new Promise(function(resolve,reject){
+    var body_parsed = ""
+    request.on('data',chunk => {
           body_parsed += chunk
       })
   

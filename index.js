@@ -149,6 +149,18 @@ route.insert("/api/books", function (request, response) {
     });
 });
 
+route.insert('/api/delete_book', function (request, response) {
+  response.setHeader("Content-type", "application/json");
+  composeJSON(request)
+  .then(e => {
+    
+      response.writeHead(200);
+      response.end(e)
+
+    })
+  
+})
+
 route.insert("/api/request_owner_books", function (request, response) {
   composeJSON(request)
     .then((result) => {
@@ -163,6 +175,8 @@ route.insert("/api/request_owner_books", function (request, response) {
       response.end(JSON.stringify(book_found));
     });
 });
+
+
 
 
 route.insert("/api/request_reserved_books", function (request, response) {
