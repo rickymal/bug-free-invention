@@ -138,26 +138,49 @@ route.insert("/api/books", function (request, response) {
       const dt = e.map((f) => {
         return f.bookId;
       });
-      // console.log("lista de livros")
-      // console.log(dt)
+      //// console.log("lista de livros")
+      //// console.log(dt)
       return Book.findAll({ where: { id: { [Op.notIn]: dt } } });
     })
     .then((e) => {
-      // console.log("lista resultante")
-      // console.log(e)
+      //// console.log("lista resultante")
+      //// console.log(e)
       response.end(JSON.stringify(e));
     });
 });
-
+//console.log
 route.insert('/api/delete_book', function (request, response) {
-  response.setHeader("Content-type", "application/json");
   composeJSON(request)
-  .then(e => {
-    
-      response.writeHead(200);
-      response.end(e)
+  .then(async ({bookId, userId}) => {
+        response.setHeader("Content-type", "application/json");     
+        const the_book_to_be_destroyed = await Book.findOne({ where : { id : bookId }})
 
-    })
+        var isOwner = the_book_to_be_destroyed.userId == userId
+
+        if (isOwner) {
+          response.writeHead(200);
+          the_book_to_be_destroyed.destroy()
+          response.end(JSON.stringify({
+            bookId,
+            userId,
+            status : "worked"
+          }))
+          
+        } else {
+          response.writeHead(481);
+          response.end(JSON.stringify({
+            bookId,
+            userId,
+            status : "worked"
+          }))
+          
+        }
+
+      })
+
+  
+    
+    
   
 })
 
@@ -180,7 +203,7 @@ route.insert("/api/request_owner_books", function (request, response) {
 
 
 route.insert("/api/request_reserved_books", function (request, response) {
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+  //console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   composeJSON(request)
     .then((result) => {
       return Number(result.userId);
@@ -201,15 +224,15 @@ route.insert("/api/request_reserved_books", function (request, response) {
 route.insert("/api/choose_book", function (request, response) {
   composeJSON(request)
     .then((result) => {
-      // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-      // console.log(typeof result)
-      // console.log(result)
+      //// console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+      //// console.log(typeof result)
+      //// console.log(result)
       return choose_book(result);
     })
     .then((book_choice) => {
-      // console.log('book choice')
-      // console.log(typeof book_choice)
-      // console.log(book_choice)
+      //// console.log('book choice')
+      //// console.log(typeof book_choice)
+      //// console.log(book_choice)
       return JSON.stringify(book_choice);
     })
     .then((book_choice) => {
@@ -225,7 +248,7 @@ route.insert("/api/choose_book", function (request, response) {
 
 route.insert("/api/add_title", function (request, response) {
   response.setHeader("Content-type", "application/json");
-  console.log('chamando método add_title')
+  //console.log('chamando método add_title')
   composeJSON(request, "json")
     .then(({ title, description, userId }) => {
       return Book.create({ title, description, userId });

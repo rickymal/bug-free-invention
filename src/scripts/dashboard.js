@@ -6,6 +6,7 @@ if (!userId) {
 
 
 function delete_owner_book(bookId, userId) {
+  console.log("Métoro delete_owner_book chamado")
   var method = "POST";
   var mode = "no-cors";
   var cache = "default";
@@ -21,8 +22,13 @@ function delete_owner_book(bookId, userId) {
 
   fetch(requestOptions)
     .then(e => {
-      console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+      return e.json()
+    })
+    .then(e => {
+      console.log("content resultaasddiashduiadahiudhaaaaaaaaaaaaaaaa")
       console.log(e)
+      
+      
     })
 }
 
