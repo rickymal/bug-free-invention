@@ -1,6 +1,6 @@
 import { log } from "../services/Log.js"
 
-
+//console
 export function composeJSON(request, format = "json") {
   return new Promise(function(resolve,reject){
     var body_parsed = ""
@@ -10,6 +10,10 @@ export function composeJSON(request, format = "json") {
   
       request.on('end',() => {
           if(format == 'json') {
+
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!")
+            console.log(body_parsed)
+
             resolve(JSON.parse(body_parsed))
           } else if(format == 'query') {
             let transpiled_object = {}

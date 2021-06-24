@@ -4,9 +4,9 @@ if (!userId) {
   userId = 1; //para fins de teste
 }
 
-
+// console
 function delete_owner_book(bookId, userId) {
-  console.log("Métoro delete_owner_book chamado")
+  // //console.log("Métoro delete_owner_book chamado")
   var method = "POST";
   var mode = "no-cors";
   var cache = "default";
@@ -15,19 +15,22 @@ function delete_owner_book(bookId, userId) {
   headers.append("Content-type", "application/json");
   var options = { method, mode, cache, body, headers };
   
-  console.log("body content")
-  console.log(typeof body)
-  console.log(body)
-  var requestOptions = new Request("/api/delete_book", options);
+  // //console.log("body content")
+  // //console.log(typeof body)
+  // //console.log(body)
+  var requestOptions = new Request("/api/delete_owner_book", options);
 
   fetch(requestOptions)
     .then(e => {
       return e.json()
     })
-    .then(e => {
-      console.log("content resultaasddiashduiadahiudhaaaaaaaaaaaaaaaa")
-      console.log(e)
+    .then(({ bookId, userId, status }) => {
+      // //console.log("content resultaasddiashduiadahiudhaaaaaaaaaaaaaaaa")
+      // console.log("final content")
+      document.getElementById('id-' + bookId).remove()
+      alert("Livro apagado com sucesso")
       
+
       
     })
 }
@@ -47,18 +50,18 @@ function request_owner_title() {
 
   headers.append("Content-type", "application/json");
   var options = { method, mode, cache, body, headers };
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
+  // //console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
   var requestOptions = new Request("/api/request_owner_books", options);
   fetch(requestOptions)
     .then(async (response) => {
-      console.log("Content");
-      console.log(response);
+      // //console.log("Content");
+      // //console.log(response);
 
       return response.json();
     })
     .then(async (lof_response_parsed) => {
-      console.log("Content parsed");
-      console.log(lof_response_parsed);
+      // //console.log("Content parsed");
+      // //console.log(lof_response_parsed);
       var card_document = document.getElementById("flex-row-content");
 
       lof_response_parsed.forEach((response_parsed) => {
@@ -86,19 +89,19 @@ function request_reserved_title() {
 
   headers.append("Content-type", "application/json");
   var options = { method, mode, cache, body, headers };
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
+  // //console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
   var requestOptions = new Request("/api/request_reserved_books", options);
 
   fetch(requestOptions)
     .then(async (response) => {
-      console.log("Content");
-      console.log(response);
+      // //console.log("Content");
+      // //console.log(response);
 
       return response.json();
     })
     .then(async (lof_response_parsed) => {
-      console.log("Content parsed");
-      console.log(lof_response_parsed);
+      // //console.log("Content parsed");
+      // //console.log(lof_response_parsed);
       var card_document = document.getElementById("flex-row-content");
 
       lof_response_parsed.forEach((response_parsed) => {
@@ -152,7 +155,7 @@ document.querySelector("form").addEventListener("submit", function (e) {
         alert("Livro adicionado com sucesso!");
       }
     })
-    .catch((err) => console.log("Error: " + err));
+    // //.catch((err) => console.log("Error: " + err));
 });
 
 // var formData = new FormData(document.querySelector('form'))
