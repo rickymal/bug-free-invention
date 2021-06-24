@@ -15,7 +15,11 @@ Reservation Represents the reservations of a book by an user
 import { composeJSON } from "./services/ComposeJSON.js";
 // function responsible for make a conversion to the datagram received at front-end to JSON format
 
-import { search_owner_book_user, search_reserved_book_user, choose_book } from "./controllers/UserController.js";
+import {
+  search_owner_book_user,
+  search_reserved_book_user,
+  choose_book,
+} from "./controllers/UserController.js";
 //Controllers
 
 /* Global variables */
@@ -149,43 +153,76 @@ route.insert("/api/books", function (request, response) {
     });
 });
 // ////console.log
-route.insert('/api/delete_owner_book', function (request, response) {
-  composeJSON(request)
-  .then(async ({bookId, userId}) => {
-        response.setHeader("Content-type", "application/json");     
-        const the_book_to_be_destroyed = await Book.findOne({ where : { id : bookId }})
-        // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        console.log(typeof the_book_to_be_destroyed)
-        
-        console.log(the_book_to_be_destroyed)
-        var isOwner = the_book_to_be_destroyed.userId == userId
+route.insert("/api/delete_owner_book", function (request, response) {
+  composeJSON(request).then(async ({ bookId, userId }) => {
+    response.setHeader("Content-type", "application/json");
+    const the_book_to_be_destroyed = await Book.findOne({
+      where: { id: bookId },
+    });
+    // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    console.log(typeof the_book_to_be_destroyed);
 
-        if (isOwner) {
-          response.writeHead(200);
-          the_book_to_be_destroyed.destroy()
-          response.end(JSON.stringify({
-            bookId,
-            userId,
-            status : "worked"
-          }))
-          
-        } else {
-          response.writeHead(481);
-          response.end(JSON.stringify({
-            bookId,
-            userId,
-            status : "not worked"
-          }))
-          
-        }
+    console.log(the_book_to_be_destroyed);
+    var isOwner = the_book_to_be_destroyed.userId == userId;
 
-      })
+    if (isOwner) {
+      response.writeHead(200);
+      the_book_to_be_destroyed.destroy();
+      response.end(
+        JSON.stringify({
+          bookId,
+          userId,
+          status: "worked",
+        })
+      );
+    } else {
+      response.writeHead(481);
+      response.end(
+        JSON.stringify({
+          bookId,
+          userId,
+          status: "not worked",
+        })
+      );
+    }
+  });
+});
 
-  
-    
-    
-  
-})
+route.insert("/api/devolve_reserved_book", function (request, response) {
+  composeJSON(request).then(async ({ bookId, userId }) => {
+    response.setHeader("Content-type", "application/json");
+    const the_book_to_be_destroyed = await Book.findOne({
+      where: { id: bookId },
+    });
+
+    // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    console.log(typeof the_book_to_be_destroyed);
+
+    console.log(the_book_to_be_destroyed);
+    var isOwner = the_book_to_be_destroyed.userId == userId;
+
+    if (isOwner) {
+      response.writeHead(200);
+      the_book_to_be_destroyed.destroy();
+      response.end(
+        JSON.stringify({
+          bookId,
+          userId,
+          status: "worked",
+        })
+      );
+    } else {
+      response.writeHead(481);
+      response.end(
+        JSON.stringify({
+          bookId,
+          userId,
+          status: "not worked",
+        })
+      );
+    }
+  });
+});
 
 // //console.log
 
@@ -204,9 +241,6 @@ route.insert("/api/request_owner_books", function (request, response) {
     });
 });
 
-
-
-
 route.insert("/api/request_reserved_books", function (request, response) {
   // ////console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   composeJSON(request)
@@ -216,15 +250,13 @@ route.insert("/api/request_reserved_books", function (request, response) {
     .then((userId) => {
       response.setHeader("Content-type", "application/json");
       response.writeHead(200);
-      
+
       return search_reserved_book_user(userId);
     })
     .then((book_found) => {
       response.end(JSON.stringify(book_found));
     });
 });
-
-
 
 route.insert("/api/choose_book", function (request, response) {
   composeJSON(request)
@@ -268,9 +300,6 @@ route.insert("/api/add_title", function (request, response) {
     });
 });
 
-
-
-
 // rota dos scripts
 route.insert("/scripts/main.js", function (request, response) {
   response.setHeader("Content-type", "text/javascript");
@@ -291,8 +320,6 @@ route.default(function (request, response) {
     "utf-8"
   );
 });
-
-
 
 /* Server configuration and routing */
 

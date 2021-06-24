@@ -14,30 +14,41 @@ function delete_owner_book(bookId, userId) {
   var body = JSON.stringify({ userId, bookId });
   headers.append("Content-type", "application/json");
   var options = { method, mode, cache, body, headers };
-  
+
   // //console.log("body content")
   // //console.log(typeof body)
   // //console.log(body)
   var requestOptions = new Request("/api/delete_owner_book", options);
 
   fetch(requestOptions)
-    .then(e => {
-      return e.json()
+    .then((e) => {
+      return e.json();
     })
     .then(({ bookId, userId, status }) => {
       // //console.log("content resultaasddiashduiadahiudhaaaaaaaaaaaaaaaa")
       // console.log("final content")
-      document.getElementById('id-' + bookId).remove()
-      alert("Livro apagado com sucesso")
-      
-
-      
-    })
+      document.getElementById("id-" + bookId).remove();
+      alert("Livro apagado com sucesso");
+    });
 }
 
-function delete_reserved_book(bookId, userId) {
-  alert("OI reserved")
-  
+function devolve_reserved_book(bookId, userId) {
+  var method = "POST";
+  var mode = "no-cors";
+  var cache = "default";
+  var headers = new Headers();
+  var body = JSON.stringify({ userId, bookId });
+  headers.append("Content-type", "application/json");
+  var options = { method, mode, cache, body, headers };
+
+  // //console.log("body content")
+  // //console.log(typeof body)
+  // //console.log(body)
+  var requestOptions = new Request("/api/devolve_reserved_book", options);
+
+  fetch(requestOptions).then((e) => {
+    console.log(e);
+  });
 }
 
 function request_owner_title() {
@@ -111,7 +122,7 @@ function request_reserved_title() {
               <h1>${response_parsed.title}</h1>
               <text>${response_parsed.description}</text>
             </div>
-          <button onclick = "delete_reserved_book(${response_parsed.id},${userId})">Desfazer reserva</button>        
+          <button onclick = "devolve_reserved_book(${response_parsed.id},${userId})">Desfazer reserva</button>        
           </div>  
           
         `;
@@ -149,13 +160,12 @@ document.querySelector("form").addEventListener("submit", function (e) {
   var options = { method, mode, cache, body, headers };
   var requestOptions = new Request("/api/add_title", options);
 
-  fetch(requestOptions)
-    .then((e) => {
-      if (e.status == 200) {
-        alert("Livro adicionado com sucesso!");
-      }
-    })
-    // //.catch((err) => console.log("Error: " + err));
+  fetch(requestOptions).then((e) => {
+    if (e.status == 200) {
+      alert("Livro adicionado com sucesso!");
+    }
+  });
+  // //.catch((err) => console.log("Error: " + err));
 });
 
 // var formData = new FormData(document.querySelector('form'))
