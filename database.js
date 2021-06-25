@@ -40,10 +40,14 @@ Book.belongsTo(User, {
   constraints: true,
 });
 
-User.hasMany(Reservation);
+User.hasMany(Reservation, {
+  onDelete : "CASCADE"
+});
 Reservation.belongsTo(User);
 
-Book.hasOne(Reservation);
+Book.hasOne(Reservation, {
+  onDelete : "CASCADE"
+});
 Reservation.belongsTo(Book);
 
 async function initializeSequelize() {

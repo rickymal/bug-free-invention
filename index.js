@@ -134,22 +134,32 @@ route.insert("/api/make_login", function (request, response) {
 
 const Op = sequelize_content.Op;
 route.insert("/api/books", function (request, response) {
+  // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   response.setHeader("Content-type", "application/json");
   response.writeHead(200);
-
+  
+  // Refazer
+  
+  
+  
   Reservation.findAll({ where: {} })
-    .then((e) => {
-      const dt = e.map((f) => {
-        return f.bookId;
-      });
+  .then((all_reservations_made) => {
+    const dt = all_reservations_made.map((f) => {
+      return f.bookId;
+    }).filter(the_bookId => the_bookId != null)
+    
+    
+    log("api book","dt: " + e)
+    
+    
+    return Book.findAll({ where: { id: { [Op.notIn]: dt } } });
+  })
+  .then((lof_books_not_reserved) => {
+      var json_content = JSON.parse(JSON.stringify(lof_books_not_reserved))
+      console.log("The content of bookId founded: " + JSON.stringify(lof_books_not_reserved))
       
       
-      return Book.findAll({ where: { id: { [Op.notIn]: dt } } });
-    })
-    .then((e) => {
-      
-      
-      response.end(JSON.stringify(e));
+      response.end(JSON.stringify(lof_books_not_reserved));
     });
 });
 

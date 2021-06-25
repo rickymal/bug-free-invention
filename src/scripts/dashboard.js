@@ -6,7 +6,7 @@ if (!userId) {
 
 // console
 function delete_owner_book(bookId, userId) {
-  // //console.log("Métoro delete_owner_book chamado")
+  
   var method = "POST";
   var mode = "no-cors";
   var cache = "default";
