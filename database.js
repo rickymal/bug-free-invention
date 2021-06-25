@@ -41,12 +41,12 @@ Book.belongsTo(User, {
 });
 
 User.hasMany(Reservation, {
-  onDelete : "CASCADE"
+  onDelete: "CASCADE",
 });
 Reservation.belongsTo(User);
 
 Book.hasOne(Reservation, {
-  onDelete : "CASCADE"
+  onDelete: "CASCADE",
 });
 Reservation.belongsTo(Book);
 
@@ -67,11 +67,9 @@ const pamela = await User.create({
 });
 
 const gustavo = await User.create({
-  email : "gustavo@tylok.com",
-  password : "123456789"
-})
-
-
+  email: "gustavo@tylok.com",
+  password: "123456789",
+});
 
 // criando os livros
 
@@ -86,31 +84,27 @@ const The_narina_Chronics = await Book.create({
 });
 
 const Homo_Sapiens = await Book.create({
-  title : "The homo Sapiens story",
-  description : "The history of homo sapiens is good",
-})
+  title: "The homo Sapiens story",
+  description: "The history of homo sapiens is good",
+});
 
-const Homo_Deus = await Book.create( {
-  title : "Homo Deus",
-  description : "The homo Deus content"
-})
+const Homo_Deus = await Book.create({
+  title: "Homo Deus",
+  description: "The homo Deus content",
+});
 
 const Linux_discovering = await Book.create({
-  title : "Discovering linux",
-  description :  "This is an book for discovering the linux",
-})
-
-
-
+  title: "Discovering linux",
+  description: "This is an book for discovering the linux",
+});
 
 knowing_yourself.setUser(henrique);
 The_narina_Chronics.setUser(henrique); // alugado
 
-Homo_Sapiens.setUser(pamela)
-Homo_Deus.setUser(pamela)
+Homo_Sapiens.setUser(pamela);
+Homo_Deus.setUser(pamela);
 
-
-Linux_discovering.setUser(gustavo) //alugado
+Linux_discovering.setUser(gustavo); //alugado
 
 Reservation.create({
   userId: henrique.id,
@@ -118,6 +112,6 @@ Reservation.create({
 });
 
 Reservation.create({
-  userId : pamela.id,
-  bookId : The_narina_Chronics.id,
-})
+  userId: pamela.id,
+  bookId: The_narina_Chronics.id,
+});

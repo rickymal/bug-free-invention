@@ -12,8 +12,8 @@ function choose_book(bookId) {
   var headers = new Headers();
   var userId = Number(localStorage.getItem("userId"));
   var body = JSON.stringify({ bookId: bookId, userId: userId });
-  console.log("Corpo que será enviado")
-  console.log(body)
+  console.log("Corpo que será enviado");
+  console.log(body);
   var requestOptions = new Request("/api/choose_book", {
     method,
     headers,
@@ -33,12 +33,14 @@ function choose_book(bookId) {
         var div_to_delete = document.getElementById("div-" + bookId);
         div_to_delete.remove();
       } else {
-        alert("O usuário só pode escolher um livro por vez, 'devolva' o livro antes de obter mais um")
+        alert(
+          "O usuário só pode escolher um livro por vez, 'devolva' o livro antes de obter mais um"
+        );
       }
     })
-    .catch(err => {
-      console.log("Error: " + err)
-    })
+    .catch((err) => {
+      console.log("Error: " + err);
+    });
 }
 
 function fetch_list_of_books() {

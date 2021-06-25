@@ -10,14 +10,14 @@
 
 - [ ] A dashboard também retorna os livros do usuário, Isso deve ser corrigido quando for inserido um sistema de autenticação
 - [x] O comando Choose_book não está funcionando (quando se clica em reservar títulos, descobrir o que é)
-- [ ] Adicionar na dashboard o livro que atualmente está sendo utilizado e uma opção para 'devolver o livro
-- [ ] Fazer o request dos livros na dashboard (ou apenas conecta-los corretamente nas rotas)
+- [x] Adicionar na dashboard o livro que atualmente está sendo utilizado e uma opção para 'devolver o livro
+- [x] Fazer o request dos livros na dashboard (ou apenas conecta-los corretamente nas rotas)
 - [ ] Inserir um middleware no front-end junto com um comando para substituir o fetch api
 - [x] devolve_reserved_book (corrigir)
 - [ ] Refatorar o código e colocar a View em um arquivo separado
 
 # Erros
 
-- [ ] As vezes o index.html não retorna todos os livros. E só volta a funcionar quando reinicia o servidor (Acontece apenas quando eu exclui um livro meu)
+- [x] As vezes o index.html não retorna todos os livros. E só volta a funcionar quando reinicia o servidor (Acontece apenas quando eu exclui um livro meu)
 - [ ] Descobrir uma maneira correta de inserir código html no começo e no final de um div com o innerHTML
-- [ ] O livro reservado na página index não aparece no Dashboard !!!!!!!!!!!!!!!!!!!!!!!!!
+- [x] O livro reservado na página index não aparece no Dashboard

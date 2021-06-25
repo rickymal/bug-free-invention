@@ -4,9 +4,7 @@ if (!userId) {
   userId = 1; //para fins de teste
 }
 
-// console
 function delete_owner_book(bookId, userId) {
-  
   var method = "POST";
   var mode = "no-cors";
   var cache = "default";
@@ -15,9 +13,6 @@ function delete_owner_book(bookId, userId) {
   headers.append("Content-type", "application/json");
   var options = { method, mode, cache, body, headers };
 
-  // //console.log("body content")
-  // //console.log(typeof body)
-  // //console.log(body)
   var requestOptions = new Request("/api/delete_owner_book", options);
 
   fetch(requestOptions)
@@ -25,8 +20,6 @@ function delete_owner_book(bookId, userId) {
       return e.json();
     })
     .then(({ bookId, userId, status }) => {
-      // //console.log("content resultaasddiashduiadahiudhaaaaaaaaaaaaaaaa")
-      // console.log("final content")
       document.getElementById("id-" + bookId).remove();
     });
 }
@@ -40,18 +33,15 @@ function devolve_reserved_book(bookId, userId) {
   headers.append("Content-type", "application/json");
   var options = { method, mode, cache, body, headers };
 
-  // //console.log("body content")
-  // //console.log(typeof body)
-  // //console.log(body)
   var requestOptions = new Request("/api/devolve_reserved_book", options);
 
-  fetch(requestOptions).then((e) => {
-    console.log(e);
-    return e.json()
-  })
-  .then(({bookId, userId, status }) => {
-    document.getElementById('id-' + bookId).remove()
-  })
+  fetch(requestOptions)
+    .then((e) => {
+      return e.json();
+    })
+    .then(({ bookId, userId, status }) => {
+      document.getElementById("id-" + bookId).remove();
+    });
 }
 
 function request_owner_title() {
@@ -64,18 +54,13 @@ function request_owner_title() {
 
   headers.append("Content-type", "application/json");
   var options = { method, mode, cache, body, headers };
-  // //console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
+
   var requestOptions = new Request("/api/request_owner_books", options);
   fetch(requestOptions)
     .then(async (response) => {
-      // //console.log("Content");
-      // //console.log(response);
-
       return response.json();
     })
     .then(async (lof_response_parsed) => {
-      // //console.log("Content parsed");
-      // //console.log(lof_response_parsed);
       var card_document = document.getElementById("flex-row-content");
 
       lof_response_parsed.forEach((response_parsed) => {
@@ -103,19 +88,14 @@ function request_reserved_title() {
 
   headers.append("Content-type", "application/json");
   var options = { method, mode, cache, body, headers };
-  // //console.log("!!!!!!!!!!!!!!!!!!!!!!!!");
+
   var requestOptions = new Request("/api/request_reserved_books", options);
 
   fetch(requestOptions)
     .then(async (response) => {
-      // //console.log("Content");
-      // //console.log(response);
-
       return response.json();
     })
     .then(async (lof_response_parsed) => {
-      // //console.log("Content parsed");
-      // //console.log(lof_response_parsed);
       var card_document = document.getElementById("flex-row-content");
 
       lof_response_parsed.forEach((response_parsed) => {
@@ -163,13 +143,14 @@ document.querySelector("form").addEventListener("submit", function (e) {
   var options = { method, mode, cache, body, headers };
   var requestOptions = new Request("/api/add_title", options);
 
-  fetch(requestOptions).then((e) => {
-    if (e.status == 200) {
-      return e.json()
-    }
-  })
-  .then(response_parsed => {
-    var component_as_string = `
+  fetch(requestOptions)
+    .then((e) => {
+      if (e.status == 200) {
+        return e.json();
+      }
+    })
+    .then((response_parsed) => {
+      var component_as_string = `
       <div class='card' id = id-${response_parsed.id}>
         <div class="text-content" style="background-color: aqua;">
           <h1>${response_parsed.title}</h1>
@@ -179,17 +160,13 @@ document.querySelector("form").addEventListener("submit", function (e) {
       </div>  
       
     `;
-    var card_document = document.getElementById('flex-row-content')
-    var new_document = document.createElement("div");
-    new_document.innerHTML = component_as_string;
-    // card_document.insertBefore(new_document, card_document.firstChild);
-    
-    card_document.appendChild(new_document)
+      var card_document = document.getElementById("flex-row-content");
+      var new_document = document.createElement("div");
+      new_document.innerHTML = component_as_string;
+      // card_document.insertBefore(new_document, card_document.firstChild);
 
-  
-
-  })
-  // //.catch((err) => console.log("Error: " + err));
+      card_document.appendChild(new_document);
+    });
 });
 
 // var formData = new FormData(document.querySelector('form'))
