@@ -3,8 +3,8 @@ import fs from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { Route } from "./services/Route.js";
-import { log, end } from "./services/Log.js";
-
+import { log, end, space } from "./services/Log.js";
+// console
 import { User, Book, Reservation, sequelize_content } from "./database.js";
 /*
 The user represent the User
@@ -134,7 +134,7 @@ route.insert("/api/make_login", function (request, response) {
 
 const Op = sequelize_content.Op;
 route.insert("/api/books", function (request, response) {
-  // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+  // // // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   response.setHeader("Content-type", "application/json");
   response.writeHead(200);
   
@@ -149,14 +149,12 @@ route.insert("/api/books", function (request, response) {
     }).filter(the_bookId => the_bookId != null)
     
     
-    log("api book","dt: " + e)
-    
     
     return Book.findAll({ where: { id: { [Op.notIn]: dt } } });
   })
   .then((lof_books_not_reserved) => {
       var json_content = JSON.parse(JSON.stringify(lof_books_not_reserved))
-      console.log("The content of bookId founded: " + JSON.stringify(lof_books_not_reserved))
+      // // console.log("The content of bookId founded: " + JSON.stringify(lof_books_not_reserved))
       
       
       response.end(JSON.stringify(lof_books_not_reserved));
@@ -260,11 +258,12 @@ route.insert("/api/request_owner_books", function (request, response) {
       response.end(JSON.stringify(book_found));
     });
 });
-
+// // console
 route.insert("/api/request_reserved_books", function (request, response) {
   
   composeJSON(request)
     .then((result) => {
+      // // console.log({userId : result.userId, bookId : result.bookId})
       return Number(result.userId);
     })
     .then((userId) => {
@@ -280,11 +279,14 @@ route.insert("/api/request_reserved_books", function (request, response) {
 
 route.insert("/api/choose_book", function (request, response) {
   composeJSON(request)
-    .then((result) => {
+    .then(({bookId, userId }) => {
+      log('choose book', 'entrando na rota')
       
       
       
-      return choose_book(result);
+      
+      
+      return choose_book({bookId, userId});
     })
     .then((book_choice) => {
       

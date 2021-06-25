@@ -4,14 +4,16 @@ function onLoad() {
   fetch_list_of_books();
 }
 
-// função disparada quando o usuário clica no card para
-function reserve_book(bookId) {
+// função disparada quando o usuário clica no card para reservar um livro
+function choose_book(bookId) {
   var method = "POST";
   var mode = "no-cors";
   var cache = "default";
   var headers = new Headers();
   var userId = Number(localStorage.getItem("userId"));
-  var body = JSON.stringify({ id: bookId, userId: userId });
+  var body = JSON.stringify({ bookId: bookId, userId: userId });
+  console.log("Corpo que será enviado")
+  console.log(body)
   var requestOptions = new Request("/api/choose_book", {
     method,
     headers,
@@ -34,7 +36,9 @@ function reserve_book(bookId) {
         alert("O usuário só pode escolher um livro por vez, 'devolva' o livro antes de obter mais um")
       }
     })
-    .catch(err => console.log("Error: " + err))
+    .catch(err => {
+      console.log("Error: " + err)
+    })
 }
 
 function fetch_list_of_books() {
@@ -63,7 +67,7 @@ function fetch_list_of_books() {
                         <text>${content.description}</text>
                     </div>
                     <div>
-                        <button id = "btn-${content.id}" onclick = "reserve_book(${content.id})">Reservar títulos</button>
+                        <button id = "btn-${content.id}" onclick = "choose_book(${content.id})">Reservar títulos</button>
                     </div>
                 </div>
                 `;

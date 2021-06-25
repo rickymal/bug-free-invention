@@ -1,6 +1,6 @@
-import { log } from "../services/Log.js";
+import { log, space } from "../services/Log.js";
 
-//console
+// //console
 export function composeJSON(request, format = "json") {
   return new Promise(function (resolve, reject) {
     var body_parsed = "";
@@ -9,21 +9,32 @@ export function composeJSON(request, format = "json") {
     });
 
     request.on("end", () => {
-      if (format == "json") {
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!");
-        console.log(body_parsed);
+      try {
+        if (format == "json") {
+          space()
+          // console.log(body_parsed)
+          const content_parsed = JSON.parse(body_parsed)
+          resolve(content_parsed);
+        } else if (format == "query") {
+          let transpiled_object = {};
+          body_parsed.split("&").forEach((content) => {
+            var key_value_pair = content.split("=");
+            transpiled_object[key_value_pair[0]] = key_value_pair[1];
+          });
+  
+          resolve(transpiled_object);
+        } else {
+          reject(new Error("Format parameter don't recognized"));
+        }
 
-        resolve(JSON.parse(body_parsed));
-      } else if (format == "query") {
-        let transpiled_object = {};
-        body_parsed.split("&").forEach((content) => {
-          var key_value_pair = content.split("=");
-          transpiled_object[key_value_pair[0]] = key_value_pair[1];
-        });
+      }
+      catch (err) {
+        // console.log("CONTENT WUTH ERERJWORIJWEOREWJIROEWJOIRWJOREIWJ")  
+        // console.log(err)
+        space()
+        // console.log(body_parsed)
+        reject(err)
 
-        resolve(transpiled_object);
-      } else {
-        reject(new Error("Format parameter don't recognized"));
       }
     });
 

@@ -31,6 +31,7 @@ export async function search_reserved_book_user(userId) {
 
 // o usuário de id 'userId' seleciona o livro de id 'bookId'
 export async function choose_book({ userId, bookId }) {
+  
   var c = await Reservation.findAll({ where: { userId } });
   var hasReservation = c.length > 0;
 

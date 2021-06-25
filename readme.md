@@ -19,5 +19,5 @@
 # Erros
 
 - [ ] As vezes o index.html não retorna todos os livros. E só volta a funcionar quando reinicia o servidor (Acontece apenas quando eu exclui um livro meu)
-- [ ] O livro reservado na página index não aparece no Dashboard 
 - [ ] Descobrir uma maneira correta de inserir código html no começo e no final de um div com o innerHTML
+- [ ] O livro reservado na página index não aparece no Dashboard !!!!!!!!!!!!!!!!!!!!!!!!!
