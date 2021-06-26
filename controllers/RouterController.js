@@ -1,5 +1,5 @@
 import { User, Book, Reservation, sequelize_content } from "../database.js";
-
+import {log} from '../services/Log.js'
 import sequelize from 'sequelize'
 const Op = sequelize.Op
 
