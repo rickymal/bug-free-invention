@@ -8,13 +8,25 @@
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "nodemon",
-
             "name": "Node: Nodemon",
             "processId": "${command:PickProcess}",
             "restart": true,
-            
             "program": "${workspaceFolder}\\index.js",
             "console": "integratedTerminal"
+        },
+        {
+            "type": "node",
+            "name": "vscode-jest-tests",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "disableOptimisticBPs": true,
+            "program": "${workspaceFolder}\\index.test.js",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--runInBand",
+                "--watchAll=false"
+            ]
         }
     ]
 }

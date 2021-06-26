@@ -1,4 +1,4 @@
-export class Route {
+export class RouteService {
     constructor() {
       this.routers = new Map()
     }

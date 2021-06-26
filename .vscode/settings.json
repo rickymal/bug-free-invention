@@ -2,5 +2,6 @@
     "cSpell.words": [
         "markus",
         "transpiled"
-    ]
+    ],
+    "jest.jestCommandLine": "index.test.js"
 }

@@ -1,0 +1,59 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add -D jest
+
+PATH: 
+  C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Python39\Scripts\;C:\Python39\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\ProgramData\chocolatey\bin;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\dotnet\;C:\Program Files\Graphviz 2.44.1\bin;C:\Program Files\nodejs\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\Henrique Mauler\.cargo\bin;C:\Users\Henrique Mauler\anaconda3;C:\Users\Henrique Mauler\anaconda3\Library\mingw-w64\bin;C:\Users\Henrique Mauler\anaconda3\Library\usr\bin;C:\Users\Henrique Mauler\anaconda3\Library\bin;C:\Users\Henrique Mauler\anaconda3\Scripts;C:\Users\Henrique Mauler\AppData\Local\Microsoft\WindowsApps;C:\Users\Henrique Mauler\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Henrique Mauler\AppData\Local\Yarn\bin;C:\Users\Henrique Mauler\.dotnet\tools;C:\Users\Henrique Mauler\Desktop\flutter_windows_2.0.4-stable\flutter\bin;C:\Users\Henrique Mauler\AppData\Roaming\npm;C:\xampp\php;C:\Users\Henrique Mauler\AppData\Local\ComposerSetup\bin;C:\Users\Henrique Mauler\AppData\Roaming\Composer\vendor\bin
+
+Yarn version: 
+  1.22.5
+
+Node version: 
+  16.1.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, unlink 'C:\Users\Henrique Mauler\Desktop\book-virtual-library\node_modules\sqlite3\lib\binding\napi-v3-win32-x64\node_sqlite3.node'
+
+npm manifest: 
+  {
+    "name": "book-virtual-library",
+    "version": "1.0.0",
+    "description": "- [] Registro de usuário \r - [] Carregar as coletâneas \r - [] Alugar um livro\r - [] Inserir um livro",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+      "test": "jest",
+      "start": "node index.js",
+      "dev": "nodemon index.js",
+      "debug": "nodemon --inspect index.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/rickymal/bug-free-invention.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/rickymal/bug-free-invention/issues"
+    },
+    "homepage": "https://github.com/rickymal/bug-free-invention#readme",
+    "dependencies": {
+      "sequelize": "^6.6.2",
+      "sqlite3": "^5.0.2",
+      "tape": "^5.2.2"
+    },
+    "devDependencies": {
+      "jest": "^27.0.5",
+      "nodemon": "^2.0.7",
+      "tap-spec": "^5.0.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

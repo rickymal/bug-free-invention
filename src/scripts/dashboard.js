@@ -32,7 +32,7 @@ function devolve_reserved_book(bookId, userId) {
   var body = JSON.stringify({ userId, bookId });
   headers.append("Content-type", "application/json");
   var options = { method, mode, cache, body, headers };
-
+  console.log(body)
   var requestOptions = new Request("/api/devolve_reserved_book", options);
 
   fetch(requestOptions)
