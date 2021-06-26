@@ -1,5 +1,5 @@
 import pkg from "sequelize";
-const { Sequelize, Model, DataTypes, Op } = pkg;
+const { Sequelize, Model, DataTypes } = pkg;
 
 export const sequelize_content = pkg;
 
@@ -12,8 +12,8 @@ export class User extends Model {}
 export class Book extends Model {}
 export class Reservation extends Model {}
 
-var dt = DataTypes;
 
+var dt = DataTypes;
 User.init(
   {
     email: dt.STRING,

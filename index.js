@@ -2,13 +2,11 @@ import http from "http";
 import { log, end } from "./services/Log.js";
 import { route } from './routes.js'
 
-/* Global variables */
-
 const port = 3000;
 const host = "localhost";
 // ambient configuration
 
-// as variáveis 'pages','styles,'scripts' são objetos contento as páginas, estilos, e scripts respectivamente
+
 /* Server configuration and routing */
 
 const server = http.createServer((request, response) => {

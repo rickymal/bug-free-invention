@@ -64,7 +64,7 @@ function fetch_list_of_books() {
       e.forEach((content) => {
         division.innerHTML += `
                 <div class='card' id = "div-${content.id}">
-                    <div class="text-content" style="background-color: aqua;">
+                    <div class="text-content">
                         <h1>${content.title}</h1>
                         <text>${content.description}</text>
                     </div>

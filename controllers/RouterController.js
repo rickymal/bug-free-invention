@@ -1,45 +1,43 @@
-import { User, Book, Reservation, sequelize_content } from '../database.js';
+import { User, Book, Reservation, sequelize_content } from "../database.js";
+
+import sequelize from 'sequelize'
+const Op = sequelize.Op
 
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 
-
 const pages_names = ["index.html", "dashboard.html", "login.html"];
-const styles_names = ["dashboard.css", "main.css", "login.css"];
+const styles_names = ["dashboard.css", "main.css", "login.css","global.css"];
 const scripts_names = ["main.js", "dashboard.js"];
 // páginas disponíveis para serem acessadas, devem ser configuradas na parte de routing também
 
-
-
-
-const __dirname = join(dirname(fileURLToPath(import.meta.url)),'..');
+const __dirname = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 const pages = new Object();
 const styles = new Object();
 const scripts = new Object();
 
 pages_names.forEach((e) => {
-  const pages_directory = join(__dirname, "src", "pages");
+  const pages_directory = join(__dirname, "view", "pages");
   pages[e.split(".")[0]] = fs.readFileSync(join(pages_directory, e), {
     encoding: "utf-8",
   });
 });
 
 styles_names.forEach((e) => {
-  const pages_directory = join(__dirname, "src", "styles");
+  const pages_directory = join(__dirname, "view", "styles");
   styles[e.split(".")[0]] = fs.readFileSync(join(pages_directory, e), {
     encoding: "utf-8",
   });
 });
 
 scripts_names.forEach((e) => {
-  const pages_directory = join(__dirname, "src", "scripts");
+  const pages_directory = join(__dirname, "view", "scripts");
   scripts[e.split(".")[0]] = fs.readFileSync(join(pages_directory, e), {
     encoding: "utf-8",
   });
 });
-
 
 import { composeJSON } from "../services/ComposeJSON.js";
 // function responsible for make a conversion to the datagram received at front-end to JSON format
@@ -50,7 +48,6 @@ import {
   choose_book,
 } from "../controllers/UserController.js";
 //Controllers
-
 
 function index(request, response) {
   response.setHeader("Content-Type", "text/html");
@@ -94,6 +91,13 @@ function styles_registration(request, response) {
   response.writeHead(200);
   response.end(styles.registration);
 }
+function styles_global(request, response) {
+  response.setHeader("Content-Type", "text/css");
+  response.writeHead(200);
+  response.end(styles.global);
+}
+
+
 
 function styles_login(request, response) {
   response.setHeader("Content-Type", "text/css");
@@ -304,6 +308,8 @@ function favicon(request, response) {
   response.writeHead(200);
   response.end();
 }
+
+
 export default {
   index,
   dashboard,
@@ -325,4 +331,5 @@ export default {
   api_delete_owner_book,
   api_books,
   api_make_login,
+  styles_global,
 };

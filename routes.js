@@ -1,6 +1,5 @@
 import { RouteService } from "./services/RouteService.js";
 
-
 /* Definição das rotas */
 
 // rota das páginas
@@ -24,6 +23,7 @@ route.insert("/styles/main.css", RouterController.styles_main);
 route.insert("/styles/dashboard.css", RouterController.styles_dashboard);
 route.insert("/styles/registration.css", RouterController.styles_registration);
 route.insert("/styles/login.css", RouterController.styles_login);
+route.insert("/styles/global.css", RouterController.styles_global);
 
 // rotas da api
 
@@ -52,5 +52,7 @@ route.insert("/api/add_title", RouterController.api_add_title);
 // rota dos scripts
 route.insert("/scripts/main.js", RouterController.scripts_main);
 route.insert("/scripts/dashboard.js", RouterController.scripts_dashboard);
-route.default(RouterController.default_);
+
+// outros
 route.insert("/favicon.ico", RouterController.favicon);
+route.default(RouterController.default_);
