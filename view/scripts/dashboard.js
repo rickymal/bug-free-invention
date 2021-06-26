@@ -63,15 +63,21 @@ function request_owner_title() {
     .then(async (lof_response_parsed) => {
       var card_document = document.getElementById("flex-row-content");
 
+      var c =
+
+
+
       lof_response_parsed.forEach((response_parsed) => {
-        card_document.innerHTML += `
-          <div class='card' id = id-${response_parsed.id}>
-              <div class="text-content" style="background-color: aqua;">
-                  <h1>${response_parsed.title}</h1>
-                  <text>${response_parsed.description}</text>
-              </div>
-              <button onclick = "delete_owner_book(${response_parsed.id},${userId})">Excluir título</button>        
-          </div>  
+        card_document.innerHTML +=  `
+        <div class="card" id = id-${response_parsed.id}>
+            <div class="text-content">
+              <h1>${response_parsed.title}</h1>
+              <text>${response_parsed.description}</text>
+            </div>
+            <div>
+              <button id="btn" onclick = "delete_owner_book(${response_parsed.id},${userId})">Excluir título</button>
+            </div>
+        </div>
         `;
       });
     })
@@ -98,16 +104,18 @@ function request_reserved_title() {
     .then(async (lof_response_parsed) => {
       var card_document = document.getElementById("flex-row-content");
 
+      // const card_document.innerHTML =  
       lof_response_parsed.forEach((response_parsed) => {
         var component_as_string = `
-          <div class='card reserved' id = id-${response_parsed.id}>
-            <div class="text-content" style="background-color: red;">
+        <div class="card" id = id-${response_parsed.id}>
+            <div class="text-content">
               <h1>${response_parsed.title}</h1>
               <text>${response_parsed.description}</text>
             </div>
-          <button onclick = "devolve_reserved_book(${response_parsed.id},${userId})">Desfazer reserva</button>        
-          </div>  
-          
+            <div>
+              <button id="btn" onclick = "devolve_reserved_book(${response_parsed.id},${userId})">Desfazer reserva</button>
+            </div>
+        </div>
         `;
 
         var new_document = document.createElement("div");
@@ -143,6 +151,9 @@ document.querySelector("form").addEventListener("submit", function (e) {
   var options = { method, mode, cache, body, headers };
   var requestOptions = new Request("/api/add_title", options);
 
+
+  const ss = 
+
   fetch(requestOptions)
     .then((e) => {
       if (e.status == 200) {
@@ -151,15 +162,16 @@ document.querySelector("form").addEventListener("submit", function (e) {
     })
     .then((response_parsed) => {
       var component_as_string = `
-      <div class='card' id = id-${response_parsed.id}>
-        <div class="text-content" style="background-color: aqua;">
-          <h1>${response_parsed.title}</h1>
-          <text>${response_parsed.description}</text>
-        </div>
-      <button onclick = "delete_owner_book(${response_parsed.id}, ${userId})">Excluir título</button>        
-      </div>  
-      
-    `;
+      <div class="card" id = id-${response_parsed.id}>
+          <div class="text-content">
+            <h1>${response_parsed.title}</h1>
+            <text>${response_parsed.description}</text>
+          </div>
+          <div>
+            <button id="btn" onclick = "delete_owner_book(${response_parsed.id},${userId})">Excluir título</button>
+          </div>
+      </div>
+      `;
       var card_document = document.getElementById("flex-row-content");
       var new_document = document.createElement("div");
       new_document.innerHTML = component_as_string;

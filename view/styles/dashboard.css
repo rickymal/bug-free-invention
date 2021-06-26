@@ -88,6 +88,25 @@ div.container {
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
+  
+}
+
+div.container input {
+    background-color: var(--primary);
+    border-radius: 10px;
+}
+
+div.container textarea {
+    background-color: var(--primary);   
+    border-radius: 10px;
+}
+
+div.container input.submit-button {
+    background-color: var(--tertiary);
+    border-radius: 10px;
+    border-color: white;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 button.submit-button {
