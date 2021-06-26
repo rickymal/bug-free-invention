@@ -96,6 +96,19 @@ div.card > div:last-child > button {
   margin: 2px 2px;
 }
 
+.btn-style {
+  
+  background-color: var(--tertiary);
+  border: 1px;
+  min-width: 40px;
+  min-height: 10px;
+  border-radius: 3px;
+  border-style: solid;
+  transition: 0.2s;
+  padding: 2px 2px;
+  margin: 2px 2px;
+}
+
 div.card > div:last-child {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

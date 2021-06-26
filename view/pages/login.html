@@ -5,16 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="styles/global.css">
     
     <title>Document</title>
 </head>
 <body>
     <nav>
-        <a href="#">Leitura</a>
+        <a href="/index">Tela principal</a>
         <ul>
-           <li>Registrar novo usuário</li>
+          <li><a href="/login">Logar</a></li>
+          <li><a href="/dashboard">Área do usuário</a></li>
         </ul>
-    </nav> 
+    </nav>
     <div class="registration-container">
         <h1>Registro do usuário</h1>
         <form action="/" method="post" onsubmit="(e) => e.preventDefault()">
@@ -22,7 +24,7 @@
             <input id="txt" type="text" name="email">
             <label>Senha</label>
             <input id="txt" type="text" name="password">
-            <input id="btn" type="submit" name="register" value="Cadastrar ou logar novo usuário"></input>    
+            <input id="btn" type="submit" name="register" value="Cadastrar ou logar novo usuário" class="btn-style"></input>    
         </form>
     </div>
     
