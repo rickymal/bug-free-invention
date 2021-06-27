@@ -1,3 +1,10 @@
+
+send_request('/','POST',new Headers(), {})
+  .then(e => e.text())
+  .then(e => console.log("Content to new request:" + e))
+
+
+
 var userId = localStorage.getItem("userId");
 if (!userId) {
   // throw new Error("Variável UserId não foi definida em localStorage") // habilitar esta opção no final
@@ -34,7 +41,6 @@ function devolve_reserved_book(bookId, userId) {
   var options = { method, mode, cache, body, headers };
   console.log(body)
   var requestOptions = new Request("/api/devolve_reserved_book", options);
-
   fetch(requestOptions)
     .then((e) => {
       return e.json();
@@ -63,7 +69,7 @@ function request_owner_title() {
     .then(async (lof_response_parsed) => {
       var card_document = document.getElementById("flex-row-content");
 
-      var c =
+      // var c =
 
 
 

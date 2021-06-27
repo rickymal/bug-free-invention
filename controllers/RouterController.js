@@ -9,7 +9,7 @@ import fs from "fs";
 
 const pages_names = ["index.html", "dashboard.html", "login.html"];
 const styles_names = ["dashboard.css", "main.css", "login.css","global.css"];
-const scripts_names = ["main.js", "dashboard.js"];
+const scripts_names = ["main.js", "dashboard.js","fetcher.js"];
 // páginas disponíveis para serem acessadas, devem ser configuradas na parte de routing também
 
 const __dirname = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -290,6 +290,13 @@ function scripts_main(request, response) {
   response.end(scripts.main);
 }
 
+function scripts_fetcher(request, response) {
+  response.setHeader("Content-type", "text/javascript");
+  response.writeHead(200);
+  response.end(scripts.fetcher);
+}
+
+
 function scripts_dashboard(request, response) {
   response.setHeader("Content-type", "text/javascript");
   response.writeHead(200);
@@ -332,4 +339,5 @@ export default {
   api_books,
   api_make_login,
   styles_global,
+  scripts_fetcher,
 };

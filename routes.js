@@ -12,6 +12,7 @@ route.insert("/", (request, response) => {
 
 import RouterController from "./controllers/RouterController.js";
 
+
 route.insert("/index", RouterController.index);
 route.insert("/dashboard", RouterController.dashboard);
 route.insert("/registration", RouterController.registration);
@@ -52,6 +53,7 @@ route.insert("/api/add_title", RouterController.api_add_title);
 // rota dos scripts
 route.insert("/scripts/main.js", RouterController.scripts_main);
 route.insert("/scripts/dashboard.js", RouterController.scripts_dashboard);
+route.insert("/scripts/fetcher.js", RouterController.scripts_fetcher);
 
 // outros
 route.insert("/favicon.ico", RouterController.favicon);
