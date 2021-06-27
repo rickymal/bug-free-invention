@@ -9,7 +9,7 @@ import fs from "fs";
 
 const pages_names = ["index.html", "dashboard.html", "login.html"];
 const styles_names = ["dashboard.css", "main.css", "login.css","global.css"];
-const scripts_names = ["main.js", "dashboard.js","fetcher.js"];
+const scripts_names = ["main.js", "dashboard.js","fetcher.js","login.js"];
 // páginas disponíveis para serem acessadas, devem ser configuradas na parte de routing também
 
 const __dirname = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -47,6 +47,7 @@ import {
   search_reserved_book_user,
   choose_book,
 } from "../controllers/UserController.js";
+import { AuthService } from "../services/AuthService.js";
 //Controllers
 
 function index(request, response) {
@@ -72,6 +73,34 @@ function login(request, response) {
   response.setHeader("Content-type", "text/html");
   response.writeHead(200);
   response.end(pages.login);
+}
+
+
+function api_make_login(request, response) {
+  console.log("CHEGANDO AQUI CARAI")
+
+  AuthService.login(request,response)
+    .then(([request, response]) => {
+      console.log(response.getHeader("Authorization"))
+      if (response.getHeader("Authorization").split(" ")[1] != "null")
+      {
+        response.setHeader("Content-type","application/json")
+        response.writeHead(200)
+        response.end()
+      }
+      else
+      {
+        console.log("entrando no null")
+        response.setHeader("Content-type","application/json")
+        response.writeHead(404)
+        response.end()
+      }
+    })
+  
+
+
+
+
 }
 
 function styles_main(request, response) {
@@ -105,18 +134,6 @@ function styles_login(request, response) {
   response.end(styles.login);
 }
 
-function api_make_login(request, response) {
-  composeJSON(request)
-    .then((json_result) => {
-      response.setHeader("Content-type", "text/plain");
-      response.writeHead(200);
-      response.end("O conteúdo enviado é: " + body);
-    })
-    .catch((error) => {
-      response.setHeader("Content-type", "text/plain");
-      response.writeHead(500);
-    });
-}
 
 function api_books(request, response) {
   response.setHeader("Content-type", "application/json");
@@ -303,6 +320,12 @@ function scripts_dashboard(request, response) {
   response.end(scripts.dashboard);
 }
 
+function scripts_login(request, response) {
+  response.setHeader("Content-type", "text/javascript");
+  response.writeHead(200);
+  response.end(scripts.login);
+}
+
 function default_(request, response) {
   response.writeHead(404);
   response.end(
@@ -336,8 +359,9 @@ export default {
   api_request_owner_books,
   api_devolve_reserved_book,
   api_delete_owner_book,
-  api_books,
   api_make_login,
+  api_books,
   styles_global,
   scripts_fetcher,
+  scripts_login,
 };

@@ -53,6 +53,7 @@ route.insert("/api/add_title", RouterController.api_add_title);
 // rota dos scripts
 route.insert("/scripts/main.js", RouterController.scripts_main);
 route.insert("/scripts/dashboard.js", RouterController.scripts_dashboard);
+route.insert("/scripts/login.js", RouterController.scripts_login);
 route.insert("/scripts/fetcher.js", RouterController.scripts_fetcher);
 
 // outros

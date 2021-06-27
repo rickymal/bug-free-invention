@@ -158,8 +158,6 @@ document.querySelector("form").addEventListener("submit", function (e) {
   var requestOptions = new Request("/api/add_title", options);
 
 
-  const ss = 
-
   fetch(requestOptions)
     .then((e) => {
       if (e.status == 200) {

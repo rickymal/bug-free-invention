@@ -10,8 +10,6 @@ export function composeJSON(request, format = "json") {
     request.on("end", () => {
       try {
         if (format == "json") {
-          space();
-
           const content_parsed = JSON.parse(body_parsed);
           resolve(content_parsed);
         } else if (format == "query") {
