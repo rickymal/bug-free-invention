@@ -77,12 +77,13 @@ function login(request, response) {
 
 
 function api_make_login(request, response) {
-  console.log("CHEGANDO AQUI CARAI")
+  
 
   AuthService.login(request,response)
     .then(([request, response]) => {
-      console.log(response.getHeader("Authorization"))
-      if (response.getHeader("Authorization").split(" ")[1] != "null")
+      const [bearer, session_id] = response.getHeader("Authorization")
+      
+      if (bearer == "Bearer" && session_id != "null")
       {
         response.setHeader("Content-type","application/json")
         response.writeHead(200)
@@ -90,7 +91,7 @@ function api_make_login(request, response) {
       }
       else
       {
-        console.log("entrando no null")
+        
         response.setHeader("Content-type","application/json")
         response.writeHead(404)
         response.end()

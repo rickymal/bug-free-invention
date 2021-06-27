@@ -13,5 +13,16 @@ document.querySelector("form").addEventListener("submit", function (e) {
 
       throw new Error("Usuário nao achado");
     })
-    .then((e) => console.log(e));
+    .then((e) => {
+        console.log("Carregando token de acesso")
+        console.log(e)
+        const [bearer, token] = e.split(" ")
+
+        if (bearer != "Bearer") {
+            throw new Error("Formato de token incorreto")
+        }
+        localStorage.setItem("session_id",token)
+        console.log("Login realizado com sucesso")
+        
+    });
 });
