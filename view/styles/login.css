@@ -25,3 +25,7 @@ div.registration-container form input#btn {
 div.registration-container form input#txt {
     min-height: 25px;
 }
+
+input#txt {
+    color : black
+}

@@ -56,7 +56,8 @@ function fetch_list_of_books() {
   });
   headers.append("Content-type", "application/json");
   const division = document.getElementById("flex-row-content");
-  fetch(requestOptions)
+
+  send_request('/api/books','GET',headers)
     .then((data) => {
       return data.json();
     })

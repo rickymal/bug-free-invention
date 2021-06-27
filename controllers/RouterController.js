@@ -77,12 +77,9 @@ function login(request, response) {
 
 
 function api_make_login(request, response) {
-  
-
   AuthService.login(request,response)
     .then(([request, response]) => {
-      const [bearer, session_id] = response.getHeader("Authorization")
-      
+      const [bearer, session_id] = response.getHeader("Authorization").split(" ")
       if (bearer == "Bearer" && session_id != "null")
       {
         response.setHeader("Content-type","application/json")
@@ -91,7 +88,6 @@ function api_make_login(request, response) {
       }
       else
       {
-        
         response.setHeader("Content-type","application/json")
         response.writeHead(404)
         response.end()

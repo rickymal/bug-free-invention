@@ -11,7 +11,7 @@ export class AuthService {
       if (!authorization_header) {
           response.setHeader("userId", "Bearer null");
           return false
-      }
+      } 
       var [ bearer, hash] = authorization_header.split(" ")
       // var [bearer, hash] = response.headers["Authorization"].split(" ");
       if (bearer != "Bearer") {

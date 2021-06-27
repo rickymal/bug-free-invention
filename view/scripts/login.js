@@ -23,6 +23,6 @@ document.querySelector("form").addEventListener("submit", function (e) {
         }
         localStorage.setItem("session_id",token)
         console.log("Login realizado com sucesso")
-        
+        window.location.href = "http://localhost:3000/index"
     });
 });
