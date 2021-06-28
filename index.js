@@ -24,9 +24,12 @@ const server = http.createServer((request, response) => {
 
   
   
+  log("authentication module","the session id at header is: " + response.getHeader('session_id'))
   const isAuthenticated = AuthService.authenticate(request, response);
+  log("authentication module","the Authentication header is: " + response.getHeader('Authorization'))
   // acrescenta ao cabeçalho o userId definido no banco de dados associado ao Token
-  log('autenticação','status da autenticação: ' + isAuthenticated)
+  log('authentication module','status of authentication: ' + isAuthenticated)
+  log("authentication module","the userIs founded: " + response.getHeader('userId'))
   
   var function_response_from_routing = route.routers.get(request.url);
   if (typeof function_response_from_routing == "function") {
@@ -40,7 +43,7 @@ const server = http.createServer((request, response) => {
 server.listen(port, host, null, () => {
   console.log("Server is running")
 
-  log("for test","realizando login com userId = 1")
+  
   
 
 

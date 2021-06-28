@@ -1,6 +1,8 @@
 import crypto from 'crypto'
 import {User} from '../database.js'
 import { composeJSON } from './ComposeJSON.js';
+import {log} from "../services/Log.js"
+
 
 export class AuthService {
     static users = new Map()
@@ -9,7 +11,7 @@ export class AuthService {
       // preciso colocar tanto o userId quanto]
       var authorization_header = response.getHeader("Authorization")
       if (!authorization_header) {
-          response.setHeader("userId", "Bearer null");
+          response.setHeader("userId", "null");
           return false
       } 
       var [ bearer, hash] = authorization_header.split(" ")
@@ -23,7 +25,7 @@ export class AuthService {
         response.setHeader("userId", userId);
         return true;
       } else {
-        response.setHeader("userId", "Bearer null");
+        response.setHeader("userId", "null");
         return false;
       }
     }
@@ -46,6 +48,9 @@ export class AuthService {
       } else{
         response.setHeader("Authorization", "Bearer null")
       }
+
+      log("login","successful, the Authorization header is: " + response.getHeader("Authorization"))
+      
       
       return [request, response];
     }

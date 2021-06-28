@@ -59,7 +59,21 @@ function fetch_list_of_books() {
 
   send_request('/api/books','GET',headers)
     .then((data) => {
-      return data.json();
+      console.log('verificando o conteúdo de retorno')
+      console.log(data.status)
+      console.log(typeof data)
+      // console.log(Object.entries(data.headers))
+      console.log(data.headers.get("Content-type"))
+
+      var content_type = data.headers.get("Content-type")
+      if (content_type == "text/plain") {
+        return data.text()
+      } else if (content_type == "Application/json") {
+        return data.json();
+      } else {
+        throw new Error("the header 'Content-type' isn't with the correct format")
+      }
+
     })
     .then((e) => {
       e.forEach((content) => {

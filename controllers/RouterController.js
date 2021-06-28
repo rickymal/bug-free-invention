@@ -1,5 +1,5 @@
 import { User, Book, Reservation, sequelize_content } from "../database.js";
-import {log} from '../services/Log.js'
+import {log, space} from '../services/Log.js'
 import sequelize from 'sequelize'
 const Op = sequelize.Op
 
@@ -80,6 +80,7 @@ function api_make_login(request, response) {
   AuthService.login(request,response)
     .then(([request, response]) => {
       const [bearer, session_id] = response.getHeader("Authorization").split(" ")
+      log('api make login','the content of make login is (bearer and session id): ' + bearer + " " + session_id)
       if (bearer == "Bearer" && session_id != "null")
       {
         response.setHeader("Content-type","application/json")
@@ -133,8 +134,25 @@ function styles_login(request, response) {
 
 
 function api_books(request, response) {
+  const userId = response.getHeader("userId")
+  const token_header = response.getHeader("Authorization")
+  log("api for fetching books","the content of authorization is: " + token_header)
+  log("api for fetching books","the content of userId is: " + userId)
+  
+  if (userId == 'null') {
+    response.setHeader("Content-type","text/plain")
+    response.writeHead(500)
+    console.log("the user is null")
+    response.end("User don't logged")
+    return
+  }
+  
   response.setHeader("Content-type", "application/json");
   response.writeHead(200);
+  
+  space()
+  console.log("userId: " + userId)
+
 
   Reservation.findAll({ where: {} })
     .then((all_reservations_made) => {
@@ -142,9 +160,9 @@ function api_books(request, response) {
         .map((f) => {
           return f.bookId;
         })
-        .filter((the_bookId) => the_bookId != null);
-
-      return Book.findAll({ where: { id: { [Op.notIn]: dt } } });
+        .filter((the_bookId_one) => the_bookId_one != null);
+      var x = 1;
+      return Book.findAll({ where: { id: { [Op.notIn]: dt }, userId : { [Op.not] : x} } });
     })
     .then((lof_books_not_reserved) => {
       var json_content = JSON.parse(JSON.stringify(lof_books_not_reserved));
