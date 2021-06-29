@@ -1,6 +1,5 @@
 import http from "http";
 import { log, end } from "./services/Log.js";
-import { route } from "./routes.js";
 import crypto from "crypto";
 const port = 3000;
 const host = "localhost";
@@ -9,6 +8,7 @@ const host = "localhost";
 /* Users authentication controller */
 
 import { AuthService } from './services/AuthService.js'
+import { route } from "./routes.js";
 
 
 /* Server configuration and routing */
@@ -21,15 +21,17 @@ const server = http.createServer((request, response) => {
   log("server", "método: " + request.method);
   log("server", "rota: " + request.url);
   
-
+  const headers = {};
+  Object.entries(request.headers).forEach((e) => (headers[e[0]] = e[1]));
+  var authorization_header = headers["authorization"];
   
   
-  log("authentication module","the session id at header is: " + response.getHeader('session_id'))
+  
+  log("authentication module","the Authentication header is: " + authorization_header)
   const isAuthenticated = AuthService.authenticate(request, response);
-  log("authentication module","the Authentication header is: " + response.getHeader('Authorization'))
   // acrescenta ao cabeçalho o userId definido no banco de dados associado ao Token
-  log('authentication module','status of authentication: ' + isAuthenticated)
-  log("authentication module","the userIs founded: " + response.getHeader('userId'))
+  
+  log("authentication module","the userId founded: " + response.getHeader('userId'))
   
   var function_response_from_routing = route.routers.get(request.url);
   if (typeof function_response_from_routing == "function") {

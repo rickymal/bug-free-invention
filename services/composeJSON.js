@@ -10,7 +10,13 @@ export function composeJSON(request, format = "json") {
     request.on("end", () => {
       try {
         if (format == "json") {
-          const content_parsed = JSON.parse(body_parsed);
+          var content_parsed = null
+          try {
+            content_parsed = JSON.parse(body_parsed);
+          } catch (err) {
+            console.log("ERROR")
+            console.log(body_parsed)
+          }
           resolve(content_parsed);
         } else if (format == "query") {
           let transpiled_object = {};
@@ -18,6 +24,7 @@ export function composeJSON(request, format = "json") {
             var key_value_pair = content.split("=");
             transpiled_object[key_value_pair[0]] = key_value_pair[1];
           });
+          // transpiled_object['userId'] = response.getHeader('userId')
 
           resolve(transpiled_object);
         } else {

@@ -5,24 +5,14 @@ send_request('/','POST',new Headers(), {})
 
 
 
-var userId = localStorage.getItem("userId");
-if (!userId) {
-  // throw new Error("Variável UserId não foi definida em localStorage") // habilitar esta opção no final
-  userId = 1; //para fins de teste
-}
 
-function delete_owner_book(bookId, userId) {
-  var method = "POST";
-  var mode = "no-cors";
-  var cache = "default";
+function delete_owner_book(bookId) {
+  
   var headers = new Headers();
-  var body = JSON.stringify({ userId, bookId });
+  var body = JSON.stringify({ bookId });
   headers.append("Content-type", "application/json");
-  var options = { method, mode, cache, body, headers };
 
-  var requestOptions = new Request("/api/delete_owner_book", options);
-
-  fetch(requestOptions)
+  send_request('/api/delete_owner_book','POST',headers, body)
     .then((e) => {
       return e.json();
     })
@@ -31,17 +21,14 @@ function delete_owner_book(bookId, userId) {
     });
 }
 
-function devolve_reserved_book(bookId, userId) {
-  var method = "POST";
-  var mode = "no-cors";
-  var cache = "default";
+function devolve_reserved_book(bookId) {
   var headers = new Headers();
-  var body = JSON.stringify({ userId, bookId });
+  var body = JSON.stringify({  bookId });
   headers.append("Content-type", "application/json");
-  var options = { method, mode, cache, body, headers };
+  
   console.log(body)
-  var requestOptions = new Request("/api/devolve_reserved_book", options);
-  fetch(requestOptions)
+  
+  send_request('/api/devolve_reserved_book','POST',headers,body)
     .then((e) => {
       return e.json();
     })
@@ -51,24 +38,18 @@ function devolve_reserved_book(bookId, userId) {
 }
 
 function request_owner_title() {
-  var method = "POST";
-  var mode = "no-cors";
-  var cache = "default";
+  
   var headers = new Headers();
-
-  var body = JSON.stringify({ userId });
-
   headers.append("Content-type", "application/json");
-  var options = { method, mode, cache, body, headers };
-
-  var requestOptions = new Request("/api/request_owner_books", options);
-  fetch(requestOptions)
+  
+  send_request('/api/request_owner_books','GET',headers,)
     .then(async (response) => {
       return response.json();
     })
     .then(async (lof_response_parsed) => {
       var card_document = document.getElementById("flex-row-content");
-
+      console.log("Request owner book made with successful")
+      console.log(lof_response_parsed)
       // var c =
 
 
@@ -81,35 +62,27 @@ function request_owner_title() {
               <text>${response_parsed.description}</text>
             </div>
             <div>
-              <button id="btn" onclick = "delete_owner_book(${response_parsed.id},${userId})">Excluir título</button>
+              <button id="btn" onclick = "delete_owner_book(${response_parsed.id},)">Excluir título</button>
             </div>
         </div>
         `;
       });
     })
-    .catch(async (error) => {});
+    .catch(async (error) => {console.log("error: "+ error)});
 }
 
 function request_reserved_title() {
-  var method = "POST";
-  var mode = "no-cors";
-  var cache = "default";
   var headers = new Headers();
-
-  var body = JSON.stringify({ userId });
-
   headers.append("Content-type", "application/json");
-  var options = { method, mode, cache, body, headers };
-
-  var requestOptions = new Request("/api/request_reserved_books", options);
-
-  fetch(requestOptions)
+  
+  send_request('/api/request_reserved_books','GET',headers,)
     .then(async (response) => {
       return response.json();
     })
     .then(async (lof_response_parsed) => {
       var card_document = document.getElementById("flex-row-content");
-
+      console.log("Request reserved book made with successful")
+      console.log(lof_response_parsed)
       // const card_document.innerHTML =  
       lof_response_parsed.forEach((response_parsed) => {
         var component_as_string = `
@@ -119,14 +92,16 @@ function request_reserved_title() {
               <text>${response_parsed.description}</text>
             </div>
             <div>
-              <button id="btn" onclick = "devolve_reserved_book(${response_parsed.id},${userId})">Desfazer reserva</button>
+              <button id="btn" onclick = "devolve_reserved_book(${response_parsed.id})">Desfazer reserva</button>
             </div>
         </div>
         `;
 
         var new_document = document.createElement("div");
+        new_document.id = "to-unwrap"
         new_document.innerHTML = component_as_string;
         card_document.insertBefore(new_document, card_document.firstChild);
+        new_document.outerHTML = new_document.innerHTML
       });
     })
     .catch(async (error) => {});
@@ -134,8 +109,8 @@ function request_reserved_title() {
 
 function onLoad() {
   // adicionar o userId do usuário
-  var form_doc = document.getElementById("hidden-input-user-id");
-  form_doc.setAttribute("value", userId.toString());
+  // var form_doc = document.getElementById("hidden-input-user-id");
+  // form_doc.setAttribute("value", userId.toString());
 
   request_reserved_title();
   request_owner_title();
@@ -147,18 +122,13 @@ document.querySelector("form").addEventListener("submit", function (e) {
   e.preventDefault();
   const form_parsed = Object.fromEntries(new FormData(e.target));
 
-  var method = "POST";
-  var mode = "no-cors";
-  var cache = "default";
   var headers = new Headers();
   var body = JSON.stringify(form_parsed);
   headers.append("Content-type", "application/json");
 
-  var options = { method, mode, cache, body, headers };
-  var requestOptions = new Request("/api/add_title", options);
 
 
-  fetch(requestOptions)
+  send_request('/api/add_title','POST',headers,body)
     .then((e) => {
       if (e.status == 200) {
         return e.json();
@@ -172,7 +142,7 @@ document.querySelector("form").addEventListener("submit", function (e) {
             <text>${response_parsed.description}</text>
           </div>
           <div>
-            <button id="btn" onclick = "delete_owner_book(${response_parsed.id},${userId})">Excluir título</button>
+            <button id="btn" onclick = "delete_owner_book(${response_parsed.id})">Excluir título</button>
           </div>
       </div>
       `;

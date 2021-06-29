@@ -22,3 +22,4 @@
 - [ ] Descobrir uma maneira correta de inserir código html no começo e no final de um div com o innerHTML
 - [x] O livro reservado na página index não aparece no Dashboard
 - [ ] no AuthService na parte login deve-se fazer o login corretamente
+- [ ] corrigir os logs de autenticação

@@ -1,4 +1,4 @@
-localStorage.setItem("userId", 1);
+
 
 function onLoad() {
   fetch_list_of_books();
@@ -6,25 +6,11 @@ function onLoad() {
 
 // função disparada quando o usuário clica no card para reservar um livro
 function choose_book(bookId) {
-  var method = "POST";
-  var mode = "no-cors";
-  var cache = "default";
+  
   var headers = new Headers();
-  var userId = Number(localStorage.getItem("userId"));
-  var body = JSON.stringify({ bookId: bookId, userId: userId });
-  console.log("Corpo que será enviado");
-  console.log(body);
-  var requestOptions = new Request("/api/choose_book", {
-    method,
-    headers,
-    mode,
-    cache,
-    body,
-  });
-
   headers.append("Content-type", "application/json");
 
-  fetch(requestOptions)
+  send_request('/api/choose_book','POST',headers, JSON.stringify({ bookId }))
     .then((e) => {
       return e.json();
     })
@@ -68,7 +54,7 @@ function fetch_list_of_books() {
       var content_type = data.headers.get("Content-type")
       if (content_type == "text/plain") {
         return data.text()
-      } else if (content_type == "Application/json") {
+      } else if (content_type == "application/json") {
         return data.json();
       } else {
         throw new Error("the header 'Content-type' isn't with the correct format")

@@ -77,22 +77,23 @@ function login(request, response) {
 
 
 function api_make_login(request, response) {
+  log("api make login","entering at api make login")
   AuthService.login(request,response)
     .then(([request, response]) => {
-      const [bearer, session_id] = response.getHeader("Authorization").split(" ")
-      log('api make login','the content of make login is (bearer and session id): ' + bearer + " " + session_id)
-      if (bearer == "Bearer" && session_id != "null")
-      {
+      // const [bearer, session_id] = response.getHeader("authorization").split(" ")
+      // log('api make login','the content of make login is (bearer and session id): ' + bearer + " " + session_id)
+      // if (bearer == "Bearer" && session_id != "null")
+      // {
         response.setHeader("Content-type","application/json")
         response.writeHead(200)
         response.end()
-      }
-      else
-      {
-        response.setHeader("Content-type","application/json")
-        response.writeHead(404)
-        response.end()
-      }
+      // }
+      // else
+      // {
+      //   response.setHeader("Content-type","application/json")
+      //   response.writeHead(404)
+      //   response.end()
+      // }
     })
   
 
@@ -135,7 +136,8 @@ function styles_login(request, response) {
 
 function api_books(request, response) {
   const userId = response.getHeader("userId")
-  const token_header = response.getHeader("Authorization")
+  
+  const token_header = response.getHeader("authorization")
   log("api for fetching books","the content of authorization is: " + token_header)
   log("api for fetching books","the content of userId is: " + userId)
   
@@ -161,8 +163,8 @@ function api_books(request, response) {
           return f.bookId;
         })
         .filter((the_bookId_one) => the_bookId_one != null);
-      var x = 1;
-      return Book.findAll({ where: { id: { [Op.notIn]: dt }, userId : { [Op.not] : x} } });
+      
+      return Book.findAll({ where: { id: { [Op.notIn]: dt }, userId : { [Op.not] : userId} } });
     })
     .then((lof_books_not_reserved) => {
       var json_content = JSON.parse(JSON.stringify(lof_books_not_reserved));
@@ -172,7 +174,8 @@ function api_books(request, response) {
 }
 
 function api_delete_owner_book(request, response) {
-  composeJSON(request).then(async ({ bookId, userId }) => {
+  composeJSON(request).then(async ({ bookId }) => {
+    const userId = response.getHeader('userId')
     response.setHeader("Content-type", "application/json");
     const the_book_to_be_destroyed = await Book.findOne({
       where: { id: bookId },
@@ -204,7 +207,8 @@ function api_delete_owner_book(request, response) {
 }
 
 function api_devolve_reserved_book(request, response) {
-  composeJSON(request).then(async ({ bookId, userId }) => {
+  composeJSON(request).then(async ({ bookId }) => {
+    const userId = response.getHeader('userId')
     response.setHeader("Content-type", "application/json");
     const the_book_to_be_destroyed = await Book.findOne({
       where: { id: bookId },
@@ -248,39 +252,56 @@ function api_devolve_reserved_book(request, response) {
 }
 
 function api_request_owner_books(request, response) {
-  composeJSON(request)
-    .then((result) => {
-      return Number(result.userId);
-    })
-    .then((userId) => {
-      response.setHeader("Content-type", "application/json");
-      response.writeHead(200);
-      return search_owner_book_user(userId);
-    })
-    .then((book_found) => {
+  const userId = response.getHeader('userId')
+  response.setHeader('Content-type','application/json')
+  search_owner_book_user(userId)
+  .then((book_found) => {
+      response.writeHead(200)
       response.end(JSON.stringify(book_found));
     });
+
+  // composeJSON(request)
+  //   .then((result) => {
+  //     return Number(result.userId);
+  //   })
+  //   .then((userId) => {
+  //     response.setHeader("Content-type", "application/json");
+  //     response.writeHead(200);
+  //     return search_owner_book_user(userId);
+  //   })
+  //   .then((book_found) => {
+  //     response.end(JSON.stringify(book_found));
+  //   });
 }
 
 function api_request_reserved_books(request, response) {
-  composeJSON(request)
-    .then((result) => {
-      return Number(result.userId);
-    })
-    .then((userId) => {
-      response.setHeader("Content-type", "application/json");
-      response.writeHead(200);
-
-      return search_reserved_book_user(userId);
-    })
+  const userId = response.getHeader('userId')
+  response.setHeader("Content-type","application/json")
+  response.writeHead(200)
+  search_reserved_book_user(userId)
     .then((book_found) => {
       response.end(JSON.stringify(book_found));
     });
+
+  // composeJSON(request)
+  //   .then((result) => {
+  //     return Number(result.userId);
+  //   })
+  //   .then((userId) => {
+    //     response.setHeader("Content-type", "application/json");
+    //     response.writeHead(200);
+    
+    //     return search_reserved_book_user(userId);
+    //   })
+    // .then((book_found) => {
+    //   response.end(JSON.stringify(book_found));
+    // });
 }
 
 function api_choose_book(request, response) {
   composeJSON(request)
-    .then(({ bookId, userId }) => {
+    .then(({ bookId }) => {
+      const userId = response.getHeader('userId')
       log("choose book", "entrando na rota");
 
       return choose_book({ bookId, userId });
@@ -303,7 +324,8 @@ function api_add_title(request, response) {
   response.setHeader("Content-type", "application/json");
 
   composeJSON(request, "json")
-    .then(({ title, description, userId }) => {
+    .then(({ title, description }) => {
+      const userId = response.getHeader('userId')
       return Book.create({ title, description, userId });
     })
     .then((book_created) => {

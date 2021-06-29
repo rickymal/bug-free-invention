@@ -32,6 +32,17 @@ route.insert("/api/make_login", RouterController.api_make_login);
 route.insert("/api/books", RouterController.api_books);
 route.insert("/api/delete_owner_book", RouterController.api_delete_owner_book);
 
+// função criada apenas para testes, deve ser apagada posteriormente.
+route.insert("/api/test_login", function (request, response) {
+  const headers = {}
+  Object.entries(request.headers).forEach(e => headers[e[0]] = e[1])
+
+  console.log("[TEST]: o conteúdo do cabeçalho: " + headers.length)
+  console.log("[TEST]: o conteúdo do cabeçalho: " + JSON.stringify(headers))
+  response.writeHead(200)
+  response.end("tudo ok")
+})
+
 route.insert(
   "/api/devolve_reserved_book",
   RouterController.api_devolve_reserved_book
