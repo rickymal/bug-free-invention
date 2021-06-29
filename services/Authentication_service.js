@@ -1,9 +1,9 @@
 import crypto from "crypto";
 import { User } from "../database.js";
-import { composeJSON } from "./ComposeJSON.js";
-import { log } from "../services/Log.js";
+import { convert_request_body_to_JSON } from "./Converter.js";
+import { log } from "./Log.js";
 
-export class AuthService {
+export class Authentication_service {
   static users = new Map();
 
   static authenticate(request, response) {
@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   static async login(request, response) {
-    const { email, password } = await composeJSON(request);
+    const { email, password } = await convert_request_body_to_JSON(request);
     var user_founded = await User.findOne({
       where: {
         email,

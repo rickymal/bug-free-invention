@@ -1,6 +1,13 @@
-import { log, space } from "../services/Log.js";
 
-export function composeJSON(request, format = "json") {
+
+export function convert_request_headers_to_JSON(request) {
+  const headers = {};
+  Object.entries(request.headers).forEach((e) => (headers[e[0]] = e[1]));
+  return headers
+}
+
+
+export function convert_request_body_to_JSON(request, request_body_format = "json") {
   return new Promise(function (resolve, reject) {
     var body_parsed = "";
     request.on("data", (chunk) => {
@@ -9,7 +16,7 @@ export function composeJSON(request, format = "json") {
 
     request.on("end", () => {
       try {
-        if (format == "json") {
+        if (request_body_format == "json") {
           var content_parsed = null
           try {
             content_parsed = JSON.parse(body_parsed);
@@ -18,7 +25,7 @@ export function composeJSON(request, format = "json") {
             console.log(body_parsed)
           }
           resolve(content_parsed);
-        } else if (format == "query") {
+        } else if (request_body_format == "query") {
           let transpiled_object = {};
           body_parsed.split("&").forEach((content) => {
             var key_value_pair = content.split("=");
@@ -28,10 +35,9 @@ export function composeJSON(request, format = "json") {
 
           resolve(transpiled_object);
         } else {
-          reject(new Error("Format parameter don't recognized"));
+          reject(new Error("request_body_format parameter don't recognized"));
         }
       } catch (err) {
-        space();
         reject(err);
       }
     });

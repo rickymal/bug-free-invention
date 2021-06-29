@@ -1,4 +1,4 @@
-import { User, Book, Reservation, sequelize_content } from "../database.js";
+import { Book, Reservation } from "../database.js";
 import {log, space} from '../services/Log.js'
 import sequelize from 'sequelize'
 const Op = sequelize.Op
@@ -10,7 +10,9 @@ import fs from "fs";
 const pages_names = ["index.html", "dashboard.html", "login.html"];
 const styles_names = ["dashboard.css", "main.css", "login.css","global.css"];
 const scripts_names = ["main.js", "dashboard.js","fetcher.js","login.js"];
-// páginas disponíveis para serem acessadas, devem ser configuradas na parte de routing também
+// pages disposable to be acesses. U need to put the name of file to work
+
+// lof = "List of"; nof = "Number of"
 
 const __dirname = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -39,15 +41,18 @@ scripts_names.forEach((e) => {
   });
 });
 
-import { composeJSON } from "../services/ComposeJSON.js";
+import { convert_request_body_to_JSON } from "../services/Converter.js";
 // function responsible for make a conversion to the datagram received at front-end to JSON format
+
+
+
 
 import {
   search_owner_book_user,
   search_reserved_book_user,
   choose_book,
 } from "../controllers/UserController.js";
-import { AuthService } from "../services/AuthService.js";
+import { Authentication_service } from "../services/Authentication_service.js";
 //Controllers
 
 function index(request, response) {
@@ -78,28 +83,12 @@ function login(request, response) {
 
 function api_make_login(request, response) {
   log("api make login","entering at api make login")
-  AuthService.login(request,response)
+  Authentication_service.login(request,response)
     .then(([request, response]) => {
-      // const [bearer, session_id] = response.getHeader("authorization").split(" ")
-      // log('api make login','the content of make login is (bearer and session id): ' + bearer + " " + session_id)
-      // if (bearer == "Bearer" && session_id != "null")
-      // {
         response.setHeader("Content-type","application/json")
         response.writeHead(200)
         response.end()
-      // }
-      // else
-      // {
-      //   response.setHeader("Content-type","application/json")
-      //   response.writeHead(404)
-      //   response.end()
-      // }
     })
-  
-
-
-
-
 }
 
 function styles_main(request, response) {
@@ -125,14 +114,11 @@ function styles_global(request, response) {
   response.end(styles.global);
 }
 
-
-
 function styles_login(request, response) {
   response.setHeader("Content-Type", "text/css");
   response.writeHead(200);
   response.end(styles.login);
 }
-
 
 function api_books(request, response) {
   const userId = response.getHeader("userId")
@@ -144,18 +130,12 @@ function api_books(request, response) {
   if (userId == 'null') {
     response.setHeader("Content-type","text/plain")
     response.writeHead(500)
-    console.log("the user is null")
     response.end("User don't logged")
     return
   }
-  
   response.setHeader("Content-type", "application/json");
   response.writeHead(200);
   
-  space()
-  console.log("userId: " + userId)
-
-
   Reservation.findAll({ where: {} })
     .then((all_reservations_made) => {
       const dt = all_reservations_made
@@ -174,7 +154,7 @@ function api_books(request, response) {
 }
 
 function api_delete_owner_book(request, response) {
-  composeJSON(request).then(async ({ bookId }) => {
+  convert_request_body_to_JSON(request).then(async ({ bookId }) => {
     const userId = response.getHeader('userId')
     response.setHeader("Content-type", "application/json");
     const the_book_to_be_destroyed = await Book.findOne({
@@ -207,7 +187,7 @@ function api_delete_owner_book(request, response) {
 }
 
 function api_devolve_reserved_book(request, response) {
-  composeJSON(request).then(async ({ bookId }) => {
+  convert_request_body_to_JSON(request).then(async ({ bookId }) => {
     const userId = response.getHeader('userId')
     response.setHeader("Content-type", "application/json");
     const the_book_to_be_destroyed = await Book.findOne({
@@ -259,19 +239,6 @@ function api_request_owner_books(request, response) {
       response.writeHead(200)
       response.end(JSON.stringify(book_found));
     });
-
-  // composeJSON(request)
-  //   .then((result) => {
-  //     return Number(result.userId);
-  //   })
-  //   .then((userId) => {
-  //     response.setHeader("Content-type", "application/json");
-  //     response.writeHead(200);
-  //     return search_owner_book_user(userId);
-  //   })
-  //   .then((book_found) => {
-  //     response.end(JSON.stringify(book_found));
-  //   });
 }
 
 function api_request_reserved_books(request, response) {
@@ -282,28 +249,13 @@ function api_request_reserved_books(request, response) {
     .then((book_found) => {
       response.end(JSON.stringify(book_found));
     });
-
-  // composeJSON(request)
-  //   .then((result) => {
-  //     return Number(result.userId);
-  //   })
-  //   .then((userId) => {
-    //     response.setHeader("Content-type", "application/json");
-    //     response.writeHead(200);
-    
-    //     return search_reserved_book_user(userId);
-    //   })
-    // .then((book_found) => {
-    //   response.end(JSON.stringify(book_found));
-    // });
 }
 
 function api_choose_book(request, response) {
-  composeJSON(request)
+  convert_request_body_to_JSON(request)
     .then(({ bookId }) => {
       const userId = response.getHeader('userId')
       log("choose book", "entrando na rota");
-
       return choose_book({ bookId, userId });
     })
     .then((book_choice) => {
@@ -322,8 +274,7 @@ function api_choose_book(request, response) {
 
 function api_add_title(request, response) {
   response.setHeader("Content-type", "application/json");
-
-  composeJSON(request, "json")
+  convert_request_body_to_JSON(request, "json")
     .then(({ title, description }) => {
       const userId = response.getHeader('userId')
       return Book.create({ title, description, userId });
@@ -376,7 +327,7 @@ function favicon(request, response) {
   response.end();
 }
 
-
+// I should only set the modifier "export" at all functions. But I forgor that i could do this. But this manner works good too.
 export default {
   index,
   dashboard,

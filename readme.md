@@ -1,5 +1,9 @@
-- [x] Alterar o nome do arquivo registration para login
+# Sobre o programa
 
+
+
+# Alterações a serem feitas
+- [x] Alterar o nome do arquivo registration para login
 - [x] Enviar o script em JavaScript para o front-end
 - [x] Atualizar o banco de dados para fazer o registro das reservas
 - [x] Programar o algoritmo para fazer a reserva dos títulos
@@ -23,3 +27,8 @@
 - [x] O livro reservado na página index não aparece no Dashboard
 - [x] no AuthService na parte login deve-se fazer o login corretamente
 - [x] corrigir os logs de autenticação
+
+
+# Atualizações 
+
+- [ ] Programar para a criação de um novo usuário caso este não exista
