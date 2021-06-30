@@ -25,10 +25,11 @@ const server = http.createServer((request, response) => {
   // const headers = {};
   // Object.entries(request.headers).forEach((e) => (headers[e[0]] = e[1]));
   // var authorization_header = headers["authorization"];
-
+  
   
   const headers = convert_request_headers_to_JSON(request)
   // Converting headers to object format (JSON) 
+  var authorization_header = headers["authorization"];
   
   
   log("authentication module","the Authentication header is: " + authorization_header)
