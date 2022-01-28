@@ -21,6 +21,69 @@ function delete_owner_book(bookId) {
     });
 }
 
+function update_book(self,bookId,last_title,last_description) {
+  self.preventDefault();
+  const form_parsed = Object.fromEntries(new FormData(self.target));
+  form_parsed.last_title = last_title,
+  form_parsed.last_description = last_description
+  console.log(form_parsed)
+  var headers = new Headers();
+  var body = JSON.stringify(form_parsed);
+  headers.append("Content-type", "application/json");
+
+
+
+  send_request('/api/edit_title','POST',headers,body)
+    .then((e) => {
+      if (e.status == 200) {
+        return e.json();
+      }
+    })
+    .then((response_parsed) => {
+      var component_as_string = `
+      <div class="card" id = id-${response_parsed.id}>
+          <div class="text-content">
+            <h1>${response_parsed.title}</h1>
+            <text>${response_parsed.description}</text>
+          </div>
+          <div>
+            <button id="btn" onclick = "delete_owner_book(${response_parsed.id})">Excluir título</button>
+            <button id="btn" onclick = "edit_owner_book(${response_parsed.id})">Editar título</button>
+          </div>
+      </div>
+      `;
+      var card_document = document.getElementById("flex-row-content");
+      var new_document = document.createElement("div");
+      new_document.innerHTML = component_as_string;
+      // card_document.insertBefore(new_document, card_document.firstChild);
+
+      card_document.appendChild(new_document);
+    });
+}
+
+
+function edit_owner_book(bookId) {
+
+  console.log("entrnado na funçaõ")
+
+  var edit_container = document.getElementById("container-updater")
+  console.log(edit_container.style.display)
+  edit_container.style.display = "flex"
+
+  var title = document.getElementById("h1Id-" + bookId).textContent
+  var description = document.getElementById("textId-" + bookId).textContent
+
+  console.log(title)
+  console.log(description)
+
+  document.getElementById("title-updater").setAttribute('value',title)
+  document.getElementById("description-updater").innerHTML = description
+  console.log("Evento listener ativado !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+  document.getElementById("frm2").addEventListener("submit", (e) => update_book(e,bookId,title,description))
+
+}
+
+
 function devolve_reserved_book(bookId) {
   var headers = new Headers();
   var body = JSON.stringify({  bookId });
@@ -52,17 +115,18 @@ function request_owner_title() {
       console.log(lof_response_parsed)
       // var c =
 
-
+      card_document.innerHTML = ""
 
       lof_response_parsed.forEach((response_parsed) => {
         card_document.innerHTML +=  `
         <div class="card" id = id-${response_parsed.id}>
             <div class="text-content">
-              <h1>${response_parsed.title}</h1>
-              <text>${response_parsed.description}</text>
+              <h1 id = "h1Id-${response_parsed.id}">${response_parsed.title}</h1>
+              <text id = "textId-${response_parsed.id}">${response_parsed.description}</text>
             </div>
             <div>
               <button id="btn" onclick = "delete_owner_book(${response_parsed.id},)">Excluir título</button>
+              <button id="btn" onclick = "edit_owner_book(${response_parsed.id},)">Editar título</button>
             </div>
         </div>
         `;
@@ -118,7 +182,8 @@ function onLoad() {
 
 // capturar os elementos
 
-document.querySelector("form").addEventListener("submit", function (e) {
+document.getElementById("frm1").addEventListener("submit", function (e) {
+// document.querySelector("form").addEventListener("submit", function (e) {
   e.preventDefault();
   const form_parsed = Object.fromEntries(new FormData(e.target));
 
@@ -143,6 +208,7 @@ document.querySelector("form").addEventListener("submit", function (e) {
           </div>
           <div>
             <button id="btn" onclick = "delete_owner_book(${response_parsed.id})">Excluir título</button>
+            <button id="btn" onclick = "edit_owner_book(${response_parsed.id})">Editar título</button>
           </div>
       </div>
       `;

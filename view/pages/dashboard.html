@@ -26,6 +26,39 @@
 
       </div>
     </div>
+    <div class="container" style="display: none;" id="container-updater">
+      <h1>editar títulos selecionado</h1>
+      <div class="flex-book">
+        <form action="/api/add_title" method="post" id="frm2">
+          <label id="label-updater">Título do livro ou revista</label>
+          <input
+            id="title-updater"
+            type="text"
+            name="title"
+            placeholder="Insira um título para o livro"
+          />
+          <label>Descrição do título</label>
+          <textarea
+            name="description"
+            id="description-updater"
+            placeholder="Insira uma descrição do produto"
+          ></textarea>
+          <input
+            type="submit"
+            class="submit-button"
+            form="frm2"
+            value="inserir livro"
+          />
+          <input
+            type="hidden"
+            name="userId"
+            form="frm2"
+            value="1"
+            id="hidden-input-user-id"
+          />
+        </form>
+      </div>
+    </div>
     <div class="container">
       <h1>adicionar títulos</h1>
       <div class="flex-book">
