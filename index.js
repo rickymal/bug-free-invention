@@ -50,9 +50,4 @@ const server = http.createServer((request, response) => {
 
 server.listen(port, host, null, () => {
   console.log("Server is running")
-
-  
-  
-
-
 });

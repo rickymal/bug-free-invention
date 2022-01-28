@@ -7,9 +7,9 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 
-const pages_names = ["index.html", "dashboard.html", "login.html"];
-const styles_names = ["dashboard.css", "main.css", "login.css","global.css"];
-const scripts_names = ["main.js", "dashboard.js","fetcher.js","login.js"];
+const pages_names = ["index.html", "dashboard.html", "login.html","registration.html"];
+const styles_names = ["dashboard.css", "main.css", "login.css","global.css","registration.css"];
+const scripts_names = ["main.js", "dashboard.js","fetcher.js","login.js","registration.js"];
 // pages disposable to be acesses. U need to put the name of file to work
 
 // lof = "List of"; nof = "Number of"
@@ -85,6 +85,23 @@ function api_make_login(request, response) {
   log("api make login","entering at api make login")
   Authentication_service.login(request,response)
     .then(([request, response]) => {
+        response.setHeader("Content-type","application/json")
+        response.writeHead(200)
+        response.end()
+    })
+}
+
+function api_make_registration(request, response) {
+  log("api make login","entering at api make login")
+  console.log("Compadre, estas aqui")
+  convert_request_body_to_JSON(request).then(e => {
+    console.log("Compadre o valor é")
+    console.log(e)
+  })
+  
+  Authentication_service.register(request,response)
+    .then(([request, response]) => {
+      console.log("???????????????????????????????!!!!!!!!!!!!!!!!!!!!!!!!")
         response.setHeader("Content-type","application/json")
         response.writeHead(200)
         response.end()
@@ -314,6 +331,12 @@ function scripts_login(request, response) {
   response.end(scripts.login);
 }
 
+function scripts_registration(request, response) {
+  response.setHeader("Content-type", "text/javascript");
+  response.writeHead(200);
+  response.end(scripts.registration);
+}
+
 function default_(request, response) {
   response.writeHead(404);
   response.end(
@@ -348,8 +371,10 @@ export default {
   api_devolve_reserved_book,
   api_delete_owner_book,
   api_make_login,
+  api_make_registration,
   api_books,
   styles_global,
   scripts_fetcher,
   scripts_login,
+  scripts_registration,
 };

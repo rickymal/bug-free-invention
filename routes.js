@@ -10,13 +10,15 @@ route.insert("/", (request, response) => {
   return 0;
 });
 
+route.insert("/",RouterController.login)
+
 import RouterController from "./controllers/RouterController.js";
 
 
 route.insert("/index", RouterController.index);
 route.insert("/dashboard", RouterController.dashboard);
-route.insert("/registration", RouterController.registration);
 route.insert("/login", RouterController.login);
+route.insert("/registration", RouterController.registration);
 
 // rota dos css's
 
@@ -29,6 +31,7 @@ route.insert("/styles/global.css", RouterController.styles_global);
 // rotas da api
 
 route.insert("/api/make_login", RouterController.api_make_login);
+route.insert("/api/make_registration", RouterController.api_make_registration);
 route.insert("/api/books", RouterController.api_books);
 route.insert("/api/delete_owner_book", RouterController.api_delete_owner_book);
 
@@ -64,6 +67,7 @@ route.insert("/api/add_title", RouterController.api_add_title);
 // rota dos scripts
 route.insert("/scripts/main.js", RouterController.scripts_main);
 route.insert("/scripts/dashboard.js", RouterController.scripts_dashboard);
+route.insert("/scripts/registration.js", RouterController.scripts_registration);
 route.insert("/scripts/login.js", RouterController.scripts_login);
 route.insert("/scripts/fetcher.js", RouterController.scripts_fetcher);
 

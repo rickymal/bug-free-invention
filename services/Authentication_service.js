@@ -39,6 +39,22 @@ export class Authentication_service {
     }
   }
 
+
+  static async register(request, response) {
+    console.log("Registration mi compadre!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    const {email, password} = await convert_request_body_to_JSON(request);
+    console.log(email)
+    console.log(password)
+    var create_user = await User.create({
+      email, password
+    })
+
+    
+
+
+    return [request, response]
+  }
+
   static async login(request, response) {
     const { email, password } = await convert_request_body_to_JSON(request);
     var user_founded = await User.findOne({

@@ -1,0 +1,31 @@
+
+
+div.registration-container {
+    background-color: var(--primary);
+    height: 100%;
+    margin: 10px 10px;
+    padding: 0px 10px;
+}
+
+div.registration-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+div.registration-container form label {
+    font-size: 15px;
+    font-weight: bold;
+
+}
+
+div.registration-container form input#btn {
+  margin-top: 30px;
+}
+
+div.registration-container form input#txt {
+    min-height: 25px;
+}
+
+input#txt {
+    color : black
+}
