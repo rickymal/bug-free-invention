@@ -34,6 +34,7 @@ route.insert("/api/make_login", RouterController.api_make_login);
 route.insert("/api/make_registration", RouterController.api_make_registration);
 route.insert("/api/books", RouterController.api_books);
 route.insert("/api/delete_owner_book", RouterController.api_delete_owner_book);
+route.insert("/api/edit_title",RouterController.api_edit_owner_book)
 
 // função criada apenas para testes, deve ser apagada posteriormente.
 route.insert("/api/test_login", function (request, response) {

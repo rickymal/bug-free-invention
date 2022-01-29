@@ -26,12 +26,13 @@ function update_book(self,bookId,last_title,last_description) {
   const form_parsed = Object.fromEntries(new FormData(self.target));
   form_parsed.last_title = last_title,
   form_parsed.last_description = last_description
+  form_parsed.bookId = bookId
   console.log(form_parsed)
   var headers = new Headers();
   var body = JSON.stringify(form_parsed);
   headers.append("Content-type", "application/json");
 
-
+  console.log("Obtendo headers")
 
   send_request('/api/edit_title','POST',headers,body)
     .then((e) => {
@@ -40,28 +41,22 @@ function update_book(self,bookId,last_title,last_description) {
       }
     })
     .then((response_parsed) => {
-      var component_as_string = `
-      <div class="card" id = id-${response_parsed.id}>
-          <div class="text-content">
-            <h1>${response_parsed.title}</h1>
-            <text>${response_parsed.description}</text>
-          </div>
-          <div>
-            <button id="btn" onclick = "delete_owner_book(${response_parsed.id})">Excluir título</button>
-            <button id="btn" onclick = "edit_owner_book(${response_parsed.id})">Editar título</button>
-          </div>
-      </div>
-      `;
-      var card_document = document.getElementById("flex-row-content");
-      var new_document = document.createElement("div");
-      new_document.innerHTML = component_as_string;
-      // card_document.insertBefore(new_document, card_document.firstChild);
 
-      card_document.appendChild(new_document);
+
+      var title_content = document.getElementById("h1Id-" + bookId)
+      var description_content = document.getElementById("textId-" + bookId)
+
+      title_content.innerHTML = form_parsed.title
+      description_content.innerHTML = form_parsed.description
+
+      // document.getElementById("frm2").style.display = "none"
+      document.getElementById("container-updater").style.display = "none"
+
     });
 }
 
 
+// mostra o campo e altera seu eventlistener
 function edit_owner_book(bookId) {
 
   console.log("entrnado na funçaõ")
@@ -69,7 +64,7 @@ function edit_owner_book(bookId) {
   var edit_container = document.getElementById("container-updater")
   console.log(edit_container.style.display)
   edit_container.style.display = "flex"
-
+  console.log("O bookId: " + bookId)
   var title = document.getElementById("h1Id-" + bookId).textContent
   var description = document.getElementById("textId-" + bookId).textContent
 
@@ -203,8 +198,8 @@ document.getElementById("frm1").addEventListener("submit", function (e) {
       var component_as_string = `
       <div class="card" id = id-${response_parsed.id}>
           <div class="text-content">
-            <h1>${response_parsed.title}</h1>
-            <text>${response_parsed.description}</text>
+            <h1 id = "h1Id-${response_parsed.id}">${response_parsed.title}</h1>
+            <text id = "textId-${response_parsed.id}">${response_parsed.description}</text>
           </div>
           <div>
             <button id="btn" onclick = "delete_owner_book(${response_parsed.id})">Excluir título</button>
@@ -212,6 +207,10 @@ document.getElementById("frm1").addEventListener("submit", function (e) {
           </div>
       </div>
       `;
+
+      console.log("component data content")
+      console.log(component_as_string)
+
       var card_document = document.getElementById("flex-row-content");
       var new_document = document.createElement("div");
       new_document.innerHTML = component_as_string;

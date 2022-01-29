@@ -203,6 +203,42 @@ function api_delete_owner_book(request, response) {
   });
 }
 
+function api_edit_owner_book(request, response) {
+  convert_request_body_to_JSON(request).then(async ({ bookId, title, description }) => {
+    const userId = response.getHeader('userId')
+    response.setHeader("Content-type", "application/json");
+    const the_book_to_be_updated = await Book.findOne({
+      where: { id: bookId },
+    });
+
+    var isOwner = the_book_to_be_updated.userId == userId;
+    console.log("MAno isso tá sendo atualizado !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    if (isOwner) {
+      response.writeHead(200);
+      the_book_to_be_updated.set({
+        title, description
+      })
+      the_book_to_be_updated.save()
+      response.end(
+        JSON.stringify({
+          bookId,
+          userId,
+          status: "worked",
+        })
+      );
+    } else {
+      response.writeHead(481);
+      response.end(
+        JSON.stringify({
+          bookId,
+          userId,
+          status: "not worked",
+        })
+      );
+    }
+  });
+}
+
 function api_devolve_reserved_book(request, response) {
   convert_request_body_to_JSON(request).then(async ({ bookId }) => {
     const userId = response.getHeader('userId')
@@ -373,6 +409,7 @@ export default {
   api_make_login,
   api_make_registration,
   api_books,
+  api_edit_owner_book,
   styles_global,
   scripts_fetcher,
   scripts_login,
