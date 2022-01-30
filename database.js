@@ -98,6 +98,7 @@ const Linux_discovering = await Book.create({
   description: "This is an book for discovering the linux",
 });
 
+
 knowing_yourself.setUser(henrique);
 The_narina_Chronics.setUser(henrique); // alugado
 
@@ -105,6 +106,7 @@ Homo_Sapiens.setUser(pamela);
 Homo_Deus.setUser(pamela);
 
 Linux_discovering.setUser(gustavo); //alugado
+
 
 // Reservation.create({
 //   userId: henrique.id,

@@ -227,7 +227,8 @@ function api_edit_owner_book(request, response) {
         })
       );
     } else {
-      response.writeHead(481);
+      // response.writeHead(481);
+      response.writeHead(418); // Esse é melhor
       response.end(
         JSON.stringify({
           bookId,
