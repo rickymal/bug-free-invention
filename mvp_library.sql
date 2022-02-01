@@ -1,35 +1,9 @@
-CREATE TABLE BOOKS(
-	 ID INT PRIMARY KEY IDENTITY,
-	 title VARCHAR(30) NOT NULL,
-	 descr VARCHAR(100) NOT NULL,
-	 userId INT 
-)
-GO
+USE MVP_BIBLIOTECA;
 
-CREATE TABLE RESERVATIONS(
-	ID INT PRIMARY KEY IDENTITY,
-	userId INT,
-	bookId INT
-)
-GO
-
-CREATE TABLE USERS(
-	ID INT PRIMARY KEY IDENTITY,
-	email VARCHAR(50) NOT NULL,
-	pwd VARCHAR(50) NOT NULL,
-)
-GO
-
-ALTER TABLE BOOKS ADD CONSTRAINT FK_USER_BOOK
-FOREIGN KEY(userId) REFERENCES USERS(ID)
-GO
-
-ALTER TABLE RESERVATIONS ADD CONSTRAINT FK_USER_REVERSATION
-FOREIGN KEY(userId) REFERENCES USERS(ID)
-GO
-
-ALTER TABLE RESERVATIONS ADD CONSTRAINT FK_BOOK_RESERVATION
-FOREIGN KEY(bookId) REFERENCES BOOKS(ID)
+DROP TABLE BOOKS
+DROP TABLE USERS
+DROP TABLE RESERVATIONS
+DROP TABLE HISTORIC
 GO
 
 ALTER TABLE BOOKS
@@ -45,9 +19,52 @@ DROP CONSTRAINT FK_BOOK_RESERVATION;
 GO
 
 
-DROP TABLE BOOKS
-DROP TABLE USERS
-DROP TABLE RESERVATIONS
+
+CREATE TABLE BOOKS(
+	 ID INT PRIMARY KEY IDENTITY,
+	 title VARCHAR(30) NOT NULL,
+	 descr VARCHAR(100) NOT NULL,
+	 userId INT 
+)
+
+
+CREATE TABLE RESERVATIONS(
+	ID INT PRIMARY KEY IDENTITY,
+	userId INT,
+	bookId INT UNIQUE
+)
+
+
+CREATE TABLE USERS(
+	ID INT PRIMARY KEY IDENTITY,
+	email VARCHAR(50) NOT NULL,
+	pwd VARCHAR(50) NOT NULL,
+)
+
+
+
+CREATE TABLE HISTORIC(
+	ID INT PRIMARY KEY IDENTITY,
+	old_title VARCHAR(20),
+	old_description VARCHAR(100),
+	new_title VARCHAR(20),
+	new_description VARCHAR(100)
+)
+GO
+
+
+ALTER TABLE BOOKS ADD CONSTRAINT FK_USER_BOOK
+FOREIGN KEY(userId) REFERENCES USERS(ID)
+GO
+
+ALTER TABLE RESERVATIONS ADD CONSTRAINT FK_USER_REVERSATION
+FOREIGN KEY(userId) REFERENCES USERS(ID)
+GO
+
+ALTER TABLE RESERVATIONS ADD CONSTRAINT FK_BOOK_RESERVATION
+FOREIGN KEY(bookId) REFERENCES BOOKS(ID)
+GO
+
 
 /* Criar um conjunto de tabelas para uso */
 
@@ -61,6 +78,7 @@ INSERT INTO BOOKS VALUES('The narnia Chronics','This is a book that will teach y
 INSERT INTO BOOKS VALUES('The homo Sapiens story','The history of homo sapiens is good',2)
 INSERT INTO BOOKS VALUES('Homo Deus','The homo Deus content',2)
 INSERT INTO BOOKS VALUES('Discovering linux','This is an book for discovering the linux',3)
+INSERT INTO BOOKS VALUES('The Dará God','This book was made for the most beauiful woman that I have meet',3)
 GO
 
 /* Deletando o campo  api_delete_owner_book */
@@ -78,8 +96,8 @@ GO
 
 /* Fazendo a reserva do livros choose_book */
  
-DROP PROCEDURE RESERVE_BOOK
-GO
+-- DROP PROCEDURE RESERVE_BOOK
+-- GO
 CREATE PROCEDURE RESERVE_BOOK @userId INT, @bookId INT
 AS
 DECLARE @VAR1 INT
@@ -171,5 +189,101 @@ SELECT * FROM BOOKS WHERE ID NOT IN (SELECT bookId FROM RESERVATIONS WHERE RESER
 
 
 /* Campo para adicionar um livro (título) api_add_title */
-INSERT INTO BOOKS VALUES('Um título','Com alguma descrição nova',3)
+INSERT INTO BOOKS VALUES('Outro título','Com alguma descrição nova',3)
 
+
+/* Criando trigger para trabalhar com os dados para provar que sabe mexer com trigger */
+
+DROP TRIGGER HISTORIC_BOOKS_TRIGGER
+GO
+
+
+CREATE TRIGGER HISTORIC_BOOKS_TRIGGER
+ON DBO.BOOKS
+FOR UPDATE
+AS
+
+	DECLARE @OLD_TITLE VARCHAR(20)
+	DECLARE @OLD_DESCRIPTION VARCHAR(100)
+	DECLARE @NEW_TITLE VARCHAR(20)
+	DECLARE @NEW_DESCRIPTION VARCHAR(100)
+
+
+	SELECT @OLD_TITLE = deleted.title from deleted
+	SELECT @OLD_DESCRIPTION = deleted.descr from deleted
+	SELECT @NEW_TITLE = inserted.title from inserted
+	SELECT @NEW_DESCRIPTION = inserted.descr from inserted
+
+	
+	INSERT INTO HISTORIC VALUES(@OLD_TITLE,@OLD_DESCRIPTION,@NEW_TITLE,@NEW_DESCRIPTION)
+
+
+GO
+
+DROP TRIGGER DELETE_RESERVED_BOOKS
+GO
+
+/* Essa trigger é desnecessária por causa da restrição */
+CREATE TRIGGER DELETE_RESERVED_BOOKS
+ON DBO.BOOKS
+FOR DELETE
+AS
+	DECLARE @RESERVATIONS INT
+	DECLARE @BOOK_ID INT
+
+	SELECT @BOOK_ID = deleted.ID FROM deleted
+	SELECT @RESERVATIONS = COUNT(*) FROM RESERVATIONS WHERE RESERVATIONS.bookId = @BOOK_ID
+
+	IF @RESERVATIONS > 0
+	BEGIN
+		RAISERROR('Não é possível apagar um livro reservado',-1,-1)
+		ROLLBACK TRANSACTION
+	END
+
+GO
+
+
+/* ================================ Realizando uma sequenica de casos de uso ==========================================*/
+
+
+/* O usuário 1 cria dois livros e aluga 2 livros do usuário 2 e 3 (O segundo não vai) */
+SELECT * FROM BOOKS -- LISTANDO TUDO PARA ANALISE
+
+INSERT INTO BOOKS VALUES('Memory of data','An data content for memory issues',1)
+INSERT INTO BOOKS VALUES('How born again','The book for bad programmers',1)
+GO
+
+
+RESERVE_BOOK @userId = 1, @bookId = 4
+GO
+
+RESERVE_BOOK @userId = 1, @bookId = 14
+GO
+
+
+
+/* O usuário 2 aluga um livro do 3 e apaga um livro alugado pelo 1 que pertence ao 2 (tenta, mas não deve conseguir pois tá reservado) */
+RESERVE_BOOK @userId = 2, @bookId = 6
+GO
+
+DELETE FROM BOOKS WHERE BOOKS.ID = 4
+GO
+
+/* O usuário 3 aluga um livro, edita os dois alugados pelo 1 e 2 */ 
+RESERVE_BOOK @userId = 3, @bookId = 4
+GO
+
+ UPDATE BOOKS SET BOOKS.title = 'Modificado', BOOKS.descr = 'Alguma descrição provinda de uma modificação'
+ WHERE BOOKS.ID = 6
+GO
+
+UPDATE BOOKS SET BOOKS.title = 'Modificado', BOOKS.descr = 'Alguma descrição provinda de uma modificação'
+ WHERE BOOKS.ID = 4
+GO
+
+/* As reservas serão desfeitas */
+DEVOLVE_BOOK @bookId = 4, @userId = 1
+GO
+
+DEVOLVE_BOOK @bookId = 6, @userId = 2
+GO
