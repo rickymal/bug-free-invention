@@ -73,16 +73,103 @@ GO
  WHERE BOOKS.ID = 2
 GO
 
-/* Devolvendo livros reservados choose_book */
-/* Checando se o usuário já fez alguma reserva */
-SELECT COUNT(*) FROM RESERVATIONS WHERE RESERVATIONS.userId = 1
+
+
+
+/* Fazendo a reserva do livros choose_book */
+ 
+DROP PROCEDURE RESERVE_BOOK
+GO
+CREATE PROCEDURE RESERVE_BOOK @userId INT, @bookId INT
+AS
+DECLARE @VAR1 INT
+ 
+	SELECT @VAR1 = COUNT(*) FROM RESERVATIONS WHERE RESERVATIONS.userId = @userId
+
+	IF @VAR1 = 0
+	BEGIN
+		INSERT INTO RESERVATIONS VALUES(@userId,@bookId)
+		SELECT * FROM RESERVATIONS
+	END
+
+	IF @VAR1 > 0
+	BEGIN
+		PRINT 'Uma reserva já foi feita?'
+	END
 GO
 
-/* Não pode existir mais de uma reserva, um usuário só pode reservar um livro por vez, supondo que não tenha reserva */
-INSERT INTO RESERVATIONS VALUES(1,2)
-SELECT * FROM RESERVATIONS
+
+EXEC RESERVE_BOOK @userId = 1, @bookId = 2
 GO
+
 
 /* Procurar os livros reservados do usuário search_reserved_book_user */
 SELECT * FROM BOOKS WHERE ID IN (SELECT bookId FROM RESERVATIONS WHERE RESERVATIONS.userId = 1)
+
+/* Procura todos os livros de um determinado usuário search_owner_book_user */
+SELECT * FROM BOOKS WHERE ID = 2
+
+/* Inserindo um novo usuário register */
+INSERT INTO USERS VALUES('novo_usuario@fakemail.com','123456789')
+
+/* Fazendo o login login */ 
+SELECT * FROM USERS 
+WHERE USERS.email = 'henriquemauler@fakemail.com' and USERS.pwd = '123456789'
+
+/* Busca todas as reservas api_books*/ 
+SELECT * FROM RESERVATIONS
+SELECT bookId FROM RESERVATIONS WHERE RESERVATIONS.bookId is not null
+SELECT * FROM BOOKS WHERE BOOKS.ID NOT IN (SELECT bookId FROM RESERVATIONS WHERE RESERVATIONS.bookId is not null) AND BOOKS.userId != 2
+
+
+
+
+DROP PROCEDURE DEVOLVE_BOOK
+GO
+
+
+/* Devolvendo livro reservado api_devolve_reserved_book */
+CREATE PROCEDURE DEVOLVE_BOOK @bookId INT, @userId INT
+AS
+	DECLARE @userSource INT;
+	
+	SELECT @userSource = RESERVATIONS.userId FROM RESERVATIONS
+	INNER JOIN BOOKS ON BOOKS.userId = RESERVATIONS.userId
+	WHERE RESERVATIONS.bookId = @bookId
+
+
+	IF @userSource != @userId
+	BEGIN
+		RAISERROR('O livro em questão não pertence ao usuário',-1,-1)
+	END
+
+	
+	PRINT 'VALOR DO USER SOURCE 1'
+		
+	IF ISNULL(COUNT(@userSource),0) != 0
+	BEGIN
+		DELETE FROM RESERVATIONS WHERE RESERVATIONS.bookId = @bookId
+	END
+
+	PRINT 'VALOR DO USER SOURCE 2'
+
+	IF ISNULL(COUNT(@userSource),0) = 0
+	BEGIN
+		RAISERROR('O livro em questão já foi devolvio, ou não existe',-1,-1)
+	END
+
+	PRINT 'VALOR DO USER SOURCE 3'
+GO
+
+EXEC DEVOLVE_BOOK @bookId = 2, @userId = 1
+GO
+
+
+
+/* api_request_reserved_books */
+SELECT * FROM BOOKS WHERE ID NOT IN (SELECT bookId FROM RESERVATIONS WHERE RESERVATIONS.userId = 2)
+
+
+/* Campo para adicionar um livro (título) api_add_title */
+INSERT INTO BOOKS VALUES('Um título','Com alguma descrição nova',3)
 

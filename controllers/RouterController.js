@@ -101,7 +101,6 @@ function api_make_registration(request, response) {
   
   Authentication_service.register(request,response)
     .then(([request, response]) => {
-      console.log("???????????????????????????????!!!!!!!!!!!!!!!!!!!!!!!!")
         response.setHeader("Content-type","application/json")
         response.writeHead(200)
         response.end()
